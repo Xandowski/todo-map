@@ -11,7 +11,7 @@ export default async (request, response) => {
         return
       }
       if (!docs) {
-        response.status(400).json({ error: 'Any daily goal from this user was found' })
+        response.status(400).json({ error: 'No daily goals for this user were found' })
         return
       }
       response.send(docs)

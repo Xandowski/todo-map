@@ -7,7 +7,7 @@ export default async (request, response) => {
           } = request.body
 
     if (!name) {
-      response.status(400).json({ message: 'Missing goal name' })
+      response.status(400).json({ message: 'Missing daily goal name' })
       return
     } else if (!owner){
       response.status(400).json({ message: 'Missing owner' })
