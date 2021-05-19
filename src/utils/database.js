@@ -8,8 +8,8 @@ const client = new MongoClient(process.env.DATABASE_URL, {
 
 export default async function connect() {
   if (!client.isConnected()) await client.connect()
+  const db = client.db('todo-map')
 
-  const db = client.db('move-it')
   return { db, client }
 
 }

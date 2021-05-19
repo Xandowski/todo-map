@@ -12,10 +12,7 @@ export default async (request, response) => {
     const { db } = await connect()
 
     const dbResponse = db.collection('users').insertOne({
-      name,
-      level: 1,
-      currentExperience: 0,
-      challengesCompleted: 0,
+      name
     })
 
     response.status(200).json((await dbResponse).ops[0])
