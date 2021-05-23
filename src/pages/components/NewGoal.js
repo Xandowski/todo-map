@@ -6,9 +6,6 @@ const NewGoal = () => {
         const res = await fetch(
           '/api/goals/add',
           {
-            headers: {
-                'content-type': 'application/x-www-form-urlencoded',
-            },
             body: JSON.stringify({
                 name: event.target.name.value,
                 type: event.target.goalType.value 
