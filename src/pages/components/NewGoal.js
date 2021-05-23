@@ -26,7 +26,7 @@ const NewGoal = () => {
         <h2>New goal</h2>
         <form onSubmit={registerGoal}>
             <div>
-                <label for="name">Goal name </label>
+                <label htmlFor="name">Goal name </label>
                 <input type="text" id="name" required />
             </div>
             <div>
