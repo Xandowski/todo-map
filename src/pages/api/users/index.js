@@ -17,13 +17,9 @@ export default async (request, response) => {
 
     response.status(200).json((await dbResponse).ops[0])
   } else if (request.method === 'GET') {
-    const { user } = request.query
+    // const { user } = request.query
     const { name } = request.body
 
-    // if (!name) {
-    //   response.status(400).json({ error: 'Missing name on request body' })
-    //   return
-    // }
     const { db } = await connect()
 
     const dbResponse = await db.collection('users').findOne({ name: name })
