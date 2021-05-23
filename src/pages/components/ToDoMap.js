@@ -1,6 +1,26 @@
 import React, { useEffect, useState } from "react";
 import Axios from 'axios'
 
+const doneGoal = async event => {
+    event.preventDefault()
+    
+    const res = await fetch(
+      '/api/goals/done',
+      {
+        body: JSON.stringify({
+            parentId: event.target.value,
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST'
+      }
+    )
+
+    const result = await res.json()
+    console.log(result)
+}
+
 const ToDoMap = () => {
     const [goals,setGoals]=useState([])
 
@@ -17,7 +37,12 @@ const ToDoMap = () => {
         <div>
             {goals.map((item,key)=>{
                 return (
-                    <div key={key}>{item.name}</div>
+                    <div key={key}>
+                        {item.name} 
+                        <span>
+                            <button value={item._id} onClick={doneGoal}>Complete it</button>
+                        </span>
+                    </div>
                 )
             })}
         </div>
