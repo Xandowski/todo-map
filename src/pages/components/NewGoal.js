@@ -23,14 +23,14 @@ const NewGoal = () => {
 
     return (
         <>
-        <h2>Add new goal</h2>
+        <h2>New goal</h2>
         <form onSubmit={registerGoal}>
             <div>
-                <label for="name">Name</label>
-                <input type="text" id="name" placeholder="Your name" required />
+                <label for="name">Goal name </label>
+                <input type="text" id="name" required />
             </div>
             <div>
-                <label for="goalType">Goal type</label>
+                <label for="goalType">Goal type </label>
                 <select id="goalType">
                     <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
