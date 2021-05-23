@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useSession } from 'next-auth/client'
 import { signOut } from 'next-auth/client'
+import NewGoal from './components/NewGoal'
 
 import Router from 'next/router'
 
@@ -21,6 +22,7 @@ const Home = () => {
         <>
           <h1>Home page</h1>
           <button onClick={() => signOut()}>Sair</button>
+          {NewGoal()}
         </>
       )) ||
         (loading && <h1>Carregando...</h1>)}
