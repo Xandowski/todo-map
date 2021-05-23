@@ -30,7 +30,7 @@ const NewGoal = () => {
                 <input type="text" id="name" required />
             </div>
             <div>
-                <label for="goalType">Goal type </label>
+                <label htmlFor="goalType">Goal type </label>
                 <select id="goalType">
                     <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
