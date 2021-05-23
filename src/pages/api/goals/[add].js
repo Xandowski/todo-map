@@ -1,16 +1,28 @@
 import connect from '../../../utils/database'
-
 export default async (request, response) => {
   if (request.method === 'POST') {
     const { name,
+            type, // 1 = daily | 2 = weekly | 3 = monthly
             owner
           } = request.body
 
     if (!name) {
-      response.status(400).json({ message: 'Missing daily goal name' })
+      response.status(400).json({ message: 'Missing name' })
       return
-    } else if (!owner){
+    } 
+    
+    if (!type){
+      response.status(400).json({ message: 'Missing type' })
+      return
+    } 
+
+    if (!owner){
       response.status(400).json({ message: 'Missing owner' })
+      return
+    }
+
+    if (type < 1 || type > 3 ){
+      response.status(400).json({ message: 'Invalid type' })
       return
     }
 
@@ -18,6 +30,7 @@ export default async (request, response) => {
     const dbResponse = db.collection('goals').insertOne({
       name,
       owner,
+      type,
       createdAt: new Date()
     })
 
