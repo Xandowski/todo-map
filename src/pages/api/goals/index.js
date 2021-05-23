@@ -5,7 +5,7 @@ export default async (request, response) => {
     const { owner } = request.body // TO DO: Get user id (owner) by session
     const { db } = await connect()
 
-    db.collection('dailyGoals').find({ owner: owner }).toArray(function (err, docs) { 
+    db.collection('goals').find({ owner: owner }).toArray(function (err, docs) { 
       if (err) {
         response.status(500).send({error: err})
         return

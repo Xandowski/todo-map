@@ -15,7 +15,7 @@ export default async (request, response) => {
     }
 
     const { db } = await connect()
-    const dbResponse = db.collection('dailyGoals').insertOne({
+    const dbResponse = db.collection('goals').insertOne({
       name,
       owner,
       createdAt: new Date()
