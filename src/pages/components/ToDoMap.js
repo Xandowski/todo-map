@@ -26,12 +26,11 @@ const haveDone =  (parentId,goalsLog,dateArrayItem) => {
     }
   })    
   if (haveDone){
-    return <span parentId={item._id} date={dateArrayItem} >🟩</span>
+    return <span parentId={parentId} date={dateArrayItem} >🟩</span>
   } else {
-    return <span parentId={item._id} data={dateArrayItem}>⬜</span>  
+    return <span parentId={parentId} data={dateArrayItem}>⬜</span>  
   }                       
 }
-
 const doneGoal = async event => {
     event.preventDefault()
     
