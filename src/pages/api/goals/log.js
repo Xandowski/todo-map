@@ -5,7 +5,7 @@ export default async (request, response) => {
   if (request.method === 'GET') {
 
     const cookies = new Cookies(request, response)
-    const sessionToken = cookies.get('next-auth.session-token')
+    const sessionToken = cookies.get(process.env.NEXTAUTH_URL == 'http://localhost:3000' ? 'next-auth.session-token' : '__Secure-next-auth.session-token')
 
     if (!sessionToken){
       response.status(400).json({ message: 'No permission' })
