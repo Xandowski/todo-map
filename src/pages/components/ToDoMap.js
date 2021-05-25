@@ -31,6 +31,27 @@ const haveDone =  (parentId,goalsLog,dateArrayItem) => {
     return <span parentId={parentId} data={dateArrayItem}>⬜</span>  
   }                       
 }
+
+const removeGoal = async event => {
+  event.preventDefault()
+  
+  const res = await fetch(
+    '/api/goals/remove',
+    {
+      body: JSON.stringify({
+          parentId: event.target.value,
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'POST'
+    }
+  )
+
+  const result = await res.json()
+  console.log(result)
+}
+
 const doneGoal = async event => {
     event.preventDefault()
     
@@ -79,7 +100,7 @@ const ToDoMap = () => {
                   <div key={key}>
                       {item.name} 
                       <span>
-                          <button value={item._id} onClick={doneGoal}>Complete it</button>
+                          <button value={item._id} onClick={doneGoal}>Complete</button>
                       </span>
                       {                          
                       getLast30days().map((dateArrayItem)=>{
@@ -87,6 +108,9 @@ const ToDoMap = () => {
                           {haveDone(item._id,goalsLog,dateArrayItem)}
                         </span>)
                       })}
+                      <span>
+                        <button value={item._id} onClick={removeGoal}>Remove</button>
+                      </span>
                   </div>
                 )
               })}
