@@ -28,7 +28,6 @@ export default async function connect() {
   const client = await MongoClient.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    connectTimeoutMS: process.env.NEXTAUTH_URL == 'http://localhost:3000' ? 10 * 1000 : false,
   })
 
   const db = await client.db(dbName)
