@@ -32,9 +32,9 @@ const NewGoal = () => {
             <div>
                 <label htmlFor="goalType">Goal type </label>
                 <select id="goalType">
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
+                    <option value="1">Daily</option>
+                    <option value="2">Weekly</option>
+                    <option value="3">Monthly</option>
                 </select>
             </div>
             <div>

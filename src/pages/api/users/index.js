@@ -9,18 +9,18 @@ export default async (request, response) => {
       return
     }
 
-    const { db } = await connect()
+    await connect()
 
-    const dbResponse = db.collection('users').insertOne({
+    const dbResponse = db.collection('users').create({
       name
     })
 
-    response.status(200).json((await dbResponse).ops[0])
+    response.status(200).json((await dbResponse))
   } else if (request.method === 'GET') {
     // const { user } = request.query
     const { name } = request.body
 
-    const { db } = await connect()
+    await connect()
 
     const dbResponse = await db.collection('users').findOne({ name: name })
 

@@ -1,4 +1,7 @@
 import connect from '../../../utils/database'
+import SessionsSchema from '../../../models/sessions'
+import GoalsSchema from '../../../models/goals'
+// import GoalsLogSchema from '../../../models/goalsLog'
 import Cookies from 'cookies'
 
 export default async (request, response) => {
@@ -11,27 +14,18 @@ export default async (request, response) => {
       response.status(400).json({ message: 'No permission' })
       return
     }
-
-    const { db } = await connect()
-    const session = await db.collection('sessions').findOne({ sessionToken: sessionToken })
+    
+    await connect()
+    const session = await SessionsSchema.findOne({ sessionToken: sessionToken })
 
     if (!session){
       response.status(400).json({ message: 'No permission' })
       return
     }
 
-    db.collection('goals').find({ owner: session.userId }).toArray(function (err, docs) { 
-      if (err) {
-        response.status(500).send({error: err})
-        return
-      }
-      if (!docs) {
-        response.status(400).json({ error: 'No goal was found' })
-        return
-      }
-      response.send(docs)
-      return
-    });
+    const dbResponse = await GoalsSchema.find({ owner: session.userId });
+    response.status(200).json(dbResponse)
+    return
 
   } else if (request.method === 'POST') {
     response.status(400).json({ message: 'Wrong method' })

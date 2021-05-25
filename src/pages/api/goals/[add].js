@@ -1,4 +1,7 @@
 import connect from '../../../utils/database'
+import SessionsSchema from '../../../models/sessions'
+import GoalsSchema from '../../../models/goals'
+// import GoalsLogSchema from '../../../models/goalsLog'
 import Cookies from 'cookies'
 
 export default async (request, response) => {
@@ -31,23 +34,22 @@ export default async (request, response) => {
       return
     }
 
-    const { db } = await connect()
-
-    const session = await db.collection('sessions').findOne({ sessionToken: sessionToken })
+    await connect()
+    const session = await SessionsSchema.findOne({ sessionToken: sessionToken })
 
     if (!session){
       response.status(400).json({ message: 'No permission' })
       return
     }
     
-    const dbResponse = db.collection('goals').insertOne({
+    const dbResponse = GoalsSchema.create({
       name,
       owner:session.userId,
       type,
       createdAt: new Date()
     })
 
-    response.status(200).json((await dbResponse).ops[0])
+    response.status(200).json((await dbResponse))
     return
 
   } else {

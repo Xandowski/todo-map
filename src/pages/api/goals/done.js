@@ -1,4 +1,7 @@
 import connect from '../../../utils/database'
+import SessionsSchema from '../../../models/sessions'
+// import GoalsSchema from '../../../models/goals'
+import GoalsLogSchema from '../../../models/goalsLog'
 import Cookies from 'cookies'
 
 export default async (request, response) => {
@@ -20,8 +23,8 @@ export default async (request, response) => {
       return
     }
 
-    const { db } = await connect()
-    const session = await db.collection('sessions').findOne({ sessionToken: sessionToken })
+    await connect()
+    const session = await SessionsSchema.findOne({ sessionToken: sessionToken })
 
     if (!session){
       response.status(400).json({ message: 'No permission' })
@@ -30,20 +33,20 @@ export default async (request, response) => {
 
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const findDuplicate = await db.collection('goalsLog').findOne({ parentId: parentId, createdAt: {$gte: today} })
+    const findDuplicate = await GoalsLogSchema.findOne({ parentId: parentId, createdAt: {$gte: today} })
 
     if (findDuplicate){
       response.status(200).json({ message: 'Already done' })
       return
     }
     
-    const dbResponse = db.collection('goalsLog').insertOne({
+    const dbResponse = GoalsLogSchema.create({
       parentId,
       owner:session.userId,
       createdAt: new Date()
     })
 
-    response.status(200).json((await dbResponse).ops[0])
+    response.status(200).json(await dbResponse)
     return
 
   } else {

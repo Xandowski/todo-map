@@ -1,4 +1,6 @@
 import connect from '../../../utils/database'
+import SessionsSchema from '../../../models/sessions'
+import GoalsSchema from '../../../models/goals'
 import Cookies from 'cookies'
 import { ObjectID } from 'mongodb'
 
@@ -20,16 +22,16 @@ export default async (request, response) => {
       return
     }
 
-    const { db } = await connect()
+    await connect()
 
-    const session = await db.collection('sessions').findOne({ sessionToken: sessionToken })
+    const session = await SessionsSchema.findOne({ sessionToken: sessionToken })
 
     if (!session){
       response.status(400).json({ message: 'No permission' })
       return
     }
     
-    const dbResponse = await db.collection('goals').deleteOne({
+    const dbResponse = await GoalsSchema.deleteOne({
       _id:ObjectID(parentId),
       owner:session.userId,
     })
