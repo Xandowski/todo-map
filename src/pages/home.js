@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { useSession } from 'next-auth/client'
 import { signOut } from 'next-auth/client'
-import NewGoal from './components/NewGoal'
-import ToDoMap from './components/ToDoMap'
+import NewGoal from '../components/NewGoal'
+import ToDoMap from '../components/TodoMap'
 
 import Router from 'next/router'
 

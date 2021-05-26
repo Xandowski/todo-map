@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Axios from 'axios'
+import {Container, GoalRow, DailyCell, GoalColumn, NameColumn, Row, Col, GoalWapper} from './style'
 
 const getLast30days = () => {
   var datesArray = []
@@ -26,9 +27,9 @@ const haveDone =  (parentId,goalsLog,dateArrayItem) => {
     }
   })    
   if (haveDone){
-    return <span parentId={parentId} date={dateArrayItem} >🟩</span>
+    return <DailyCell parentId={parentId} date={dateArrayItem} done></DailyCell>
   } else {
-    return <span parentId={parentId} data={dateArrayItem}>⬜</span>  
+    return <DailyCell parentId={parentId} date={dateArrayItem}></DailyCell>
   }                       
 }
 
@@ -92,32 +93,37 @@ const ToDoMap = () => {
     }
 
     return (
-        <>
-        <h2>To-Do Map</h2>
-        <div>
-            {goals.map((item,key)=>{
-                return (
-                  <div key={key}>
-                      {item.name} 
-                      <span>
-                          <button value={item._id} onClick={doneGoal}>Complete</button>
-                      </span>
-                      {                          
-                      getLast30days().map((dateArrayItem)=>{
-                        return (<span>
-                          {haveDone(item._id,goalsLog,dateArrayItem)}
-                        </span>)
-                      })}
-                      <span>
-                        <button value={item._id} onClick={removeGoal}>Remove</button>
-                      </span>
-                  </div>
-                )
-              })}
-        </div>
-        <div>
-        </div>
-        </>
+        <Container>
+            <Col>
+              {goals.map((item,key)=>{
+                  return (
+                    <GoalRow>
+                      <NameColumn  key={key}>
+                        <button value={item._id} onClick={doneGoal}>
+                          {item.name} 
+                        </button>
+                      </NameColumn>
+                    </GoalRow>
+                  )
+                })}
+            </Col>
+              <Col>
+              <GoalWapper>
+              {goals.map((item,key)=>{
+                  return (
+                    <GoalRow key={key}>
+                      <GoalColumn  key={key}>
+                      <div>
+                        {getLast30days().map((dateArrayItem)=>{ return (<> {haveDone(item._id,goalsLog,dateArrayItem)} </>) })}
+                        </div>
+                        {/* <button value={item._id} onClick={removeGoal}>Remove</button> */}
+                      </GoalColumn>
+                    </GoalRow>
+                  )
+                })}
+              </GoalWapper>
+              </Col>
+        </Container>
     )
   }
   
