@@ -8,11 +8,6 @@ import { signIn } from 'next-auth/client'
 const LoginPage = () => {
   const [session, loading] = useSession()
 
-  const handleLogin = () => {
-
-
-  }
-
   useEffect(() => {
     if (session) {
       Router.push('/home')
