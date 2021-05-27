@@ -13,7 +13,7 @@ export const GlobalStyles = createGlobalStyle`
     transition: all 0.50s linear;
   }
   body, input, textarea, button {
-    font: 400 16px "Inter", sans-serif;
+    font: 0 16px "Inter", sans-serif;
   }
   button {
     cursor: pointer;
