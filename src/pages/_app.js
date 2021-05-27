@@ -1,29 +1,20 @@
-import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { Provider } from 'next-auth/client'
+import React, { useContext } from 'react'
+import {
+  ThemeSwitchContext,
+  ThemeSwitchProvider,
+} from '../contexts/ThemeSwitchContext'
 
-const GlobalStyle = createGlobalStyle`
-  body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-`
-
-const theme = {
-  colors: {
-    primary: '#0070f3',
-  },
-}
+import { GlobalStyles } from '../styles/global'
 
 export default function App({ Component, pageProps }) {
+  const { toggleTheme } = useContext(ThemeSwitchContext)
   return (
-    <>
-      <GlobalStyle />
-      <ThemeProvider theme={theme}>
-        <Provider session={pageProps.session}>
-          <Component {...pageProps} />
-        </Provider>
-      </ThemeProvider>
-    </>
+    <ThemeSwitchProvider>
+      <Provider session={pageProps.session}>
+        <GlobalStyles />
+        <Component toggleTheme={toggleTheme} {...pageProps} />
+      </Provider>
+    </ThemeSwitchProvider>
   )
 }
