@@ -19,7 +19,8 @@ module.exports = {
     'react',
   ],
   rules: {
-    semi: ['error', 'never'],
+    "semi": ['error', 'never'],
+    "indent": ["error", 2],
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.tsx'] }],
     'react/jsx-props-no-spreading': 'off',
     "react/prop-types": "off",
