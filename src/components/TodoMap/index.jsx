@@ -62,6 +62,55 @@ const removeGoal = async event => {
   console.log(result)
 }
 
+var percentColors = [
+  { pct: 0.0, color: { r: 0xff, g: 0xff, b: 0xff } },
+  { pct: 0.5, color: { r: 0xff, g: 0xff, b: 0 } },
+  { pct: 1.0, color: { r: 0, g: 0xff, b: 0 } } ];
+
+const getMax = (obj) =>{
+  if (Object.keys(obj).length){
+    return Object.keys(obj).reduce((a, b) => obj[a] > obj[b] ? a : b);
+  }
+  return 1
+}
+
+const getMin = (obj) =>{
+  if (Object.keys(obj).length){
+    return Object.keys(obj).reduce((a, b) => obj[a] < obj[b] ? a : b);
+  }
+  return 1
+}
+
+const getGreenToRed = (input=1,min,max) => {
+  var percent = ((input - min) * 100) / (max - min)
+  const r = 255 * percent/100;
+  const g = 255 - (255 * percent/100);
+  return 'rgb('+r+','+g+',0)';
+}
+
+var getColorForPercentage = function(input=1,min,max) {
+  var pct = ((input - min) * 100) / (max - min)
+  for (var i = 1; i < percentColors.length - 1; i++) {
+      if (pct < percentColors[i].pct) {
+          break;
+      }
+  }
+
+  var lower = percentColors[i - 1];
+  var upper = percentColors[i];
+  var range = upper.pct - lower.pct;
+  var rangePct = (pct - lower.pct) / range;
+  var pctLower = 1 - rangePct;
+  var pctUpper = rangePct;
+  var color = {
+      r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
+      g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
+      b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
+  };
+  return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
+  // or output as hex if preferred
+};
+
 const doneGoal = async event => {
     event.preventDefault()
     
@@ -84,23 +133,31 @@ const doneGoal = async event => {
 
 const ToDoMap = () => {
     const [goals,setGoals]=useState([])
-
     useEffect(() => { fetchGoals() }, [])
-
     const fetchGoals=async()=>{
       const response=await Axios('/api/goals');
       setGoals(response.data)    
     }
 
+    const [goalsImtensity,setGoalsIntensity]=useState({})
+
     const [goalsLog,setGoalsLog]=useState([])
-
     useEffect(() => { fetchGoalsLog() }, [])
-
     const fetchGoalsLog=async()=>{
       const response=await Axios('/api/goals/log');
+
+      response.data.forEach((item)=>{
+        if (goalsImtensity[item.parentId]){
+          goalsImtensity[item.parentId] = goalsImtensity[item.parentId] + 1
+        } else {
+          goalsImtensity[item.parentId] = 1
+        }
+      })
+
+      setGoalsIntensity(goalsImtensity)
       setGoalsLog(response.data)    
     }
-
+    // useEffect(()=>console.log(goals))
     return (
         <Container>
             <Col>
@@ -108,12 +165,9 @@ const ToDoMap = () => {
                   return (
                     <GoalRow>
                       <NameColumn  key={key}>
-                        <GoalNameButton value={item._id} onClick={doneGoal}>
-                          {item.name} 
+                        <GoalNameButton value={item._id} onClick={doneGoal} style={{backgroundColor:getGreenToRed(goalsImtensity[item._id],goalsImtensity[getMin(goalsImtensity)],goalsImtensity[getMax(goalsImtensity)])}}>
+                          {item.name} {goalsImtensity[item._id]} 
                         </GoalNameButton>
-                        {/* <button value={item._id} onClick={doneGoal}>
-                        {item.name}  */}
-                        {/* </button> */}
                       </NameColumn>
                     </GoalRow>
                   )
