@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Axios from 'axios'
-import {Container, GoalRow, DailyCell, GoalColumn, NameColumn, Row, Col, GoalWapper} from './style'
+import {
+    Container,
+    GoalRow,
+    DailyCell,
+    GoalColumn,
+    NameColumn,
+    Col,
+    GoalWapper,
+    GoalNameButton
+  } from './style'
 
 const getLast30days = () => {
   var datesArray = []
@@ -99,9 +108,12 @@ const ToDoMap = () => {
                   return (
                     <GoalRow>
                       <NameColumn  key={key}>
-                        <button value={item._id} onClick={doneGoal}>
+                        <GoalNameButton value={item._id} onClick={doneGoal}>
                           {item.name} 
-                        </button>
+                        </GoalNameButton>
+                        {/* <button value={item._id} onClick={doneGoal}>
+                        {item.name}  */}
+                        {/* </button> */}
                       </NameColumn>
                     </GoalRow>
                   )
