@@ -4,9 +4,10 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'plugin:react/recommended',
     'airbnb',
-    'airbnb/hooks'
+    'airbnb/hooks',
+    // 'plugin:react/recommended',
+    'plugin:prettier/recommended',
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -20,13 +21,12 @@ module.exports = {
     'react',
   ],
   rules: {
-    semi: ['error', 'never'],
-    // "indent": ["error", 2],
+    "semi": ['error', 'never'],
+    "indent": ["error", 2],
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.tsx'] }],
     'react/jsx-props-no-spreading': 'off',
-    "react/prop-types": "off",
-    'react/jsx-props-no-spreading': 'off',
-    "prettier/prettier": "error",
-    "react/react-in-jsx-scope": "off",
+    'react/prop-types': 'off',
+    'prettier/prettier': 'error',
+    'react/react-in-jsx-scope': 'off',
   },
-};
+}
