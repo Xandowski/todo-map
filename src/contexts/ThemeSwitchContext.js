@@ -7,19 +7,17 @@ import usePersistedState from '../utils/usePersistedState'
 export const ThemeSwitchContext = createContext({})
 
 export function ThemeSwitchProvider({ children }) {
-  const [theme, setTheme] = usePersistedState('theme', light)
+  const [theme, setTheme] = usePersistedState('theme', {title:'light'})
 
   const toggleTheme = () => {
-    setTheme(theme.title === 'light' ? dark : light)
+    setTheme(theme.title === 'light' ? {title:'dark'} : {title:'light'})
   }
 
   return (
     <ThemeSwitchContext.Provider
-      value={{
-        toggleTheme,
-      }}
+      value={toggleTheme}
     >
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <ThemeProvider theme={theme.title === 'light' ? light : dark}>{children}</ThemeProvider>
     </ThemeSwitchContext.Provider>
   )
 }

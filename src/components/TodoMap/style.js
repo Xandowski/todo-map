@@ -14,6 +14,8 @@ vertical-align:top;
 
 export const GoalRow = styled.div`
 white-space:nowrap;
+height: 28px;
+margin-bottom: 3px;
 `
 
 export const GoalColumn = styled.div`
@@ -29,6 +31,7 @@ max-width: 700px;
     width: auto;
     white-space: nowrap;
   }
+
 /* 
 max-width: calc(100vw - 260px);
 width: auto;
@@ -46,7 +49,7 @@ white-space: nowrap; */
     margin-bottom: 50px;
     height: 100%;
     background-image: linear-gradient(90deg,rgba(255, 255, 255, 0.0) 85%, rgba(255, 255, 255, 1) 95%);
-} */ */
+} */ 
 
 &::-webkit-scrollbar-track {
     box-shadow: inset 0 0 0px rgba(0,0,0,0);
@@ -75,7 +78,7 @@ display: inline-block;
 white-space: normal; /*Prevents child elements from inheriting nowrap.*/
 min-height: 28px;
 min-width: 30px;
-background: ${props => props.done ? "#66ff99" : "#f2f2f2"};
+background: ${props => props.done ? props.theme.colors.green : props.theme.colors.lightGrey};
 `
 
 export const NameColumn = styled.div`
@@ -89,9 +92,11 @@ font-size: 23px;
 export const GoalNameButton = styled.button`
 font-size: 19px;
 border: 0;
-background: #ccffcc;
+background: ${(props) => props.theme.colors.lightGrey};
+border: 2px solid ${(props) => props.theme.colors.lightGrey};
 border-radius: 15px;
-padding: 3px 15px 3px 15px;
+padding: 1px 15px 1px 15px;
+margin: 0;
 cursor: pointer;
 float:right;
 position:relative;
@@ -100,14 +105,13 @@ position:relative;
     content: "Done";
     position:absolute;
     width: 100%;
-    left: 0;
-    top: 0;
-    background-color: #80ff80;
-    border: 0;
+    left: -2px;
+    top: -2px;
+    background-color: ${(props) => props.theme.colors.green};
+    border: 2px solid ${(props) => props.theme.colors.green};
     border-radius: 15px;
     cursor: pointer;
-    padding: 3px 0 3px 0;
-    /* color: white; */
+    padding: 1px 0 1px 0;
 }
 &:hover:after {
     display: block;
@@ -115,5 +119,4 @@ position:relative;
 &:hover {
     background: #b3ffb3;
 }
-
 `
