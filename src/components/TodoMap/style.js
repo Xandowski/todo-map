@@ -24,6 +24,15 @@ export const GoalWapper = styled.div`
 overflow-x: scroll;
 overflow-y: hidden;
 max-width: 700px;
+@media (max-width: 960px) {
+    max-width: calc(100vw - 280px);
+    width: auto;
+    white-space: nowrap;
+  }
+/* 
+max-width: calc(100vw - 260px);
+width: auto;
+white-space: nowrap; */
 
 /* &:hover:before {
     top: -12px;
@@ -37,9 +46,10 @@ max-width: 700px;
     margin-bottom: 50px;
     height: 100%;
     background-image: linear-gradient(90deg,rgba(255, 255, 255, 0.0) 85%, rgba(255, 255, 255, 1) 95%);
-} */
+} */ */
 
 &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 0px rgba(0,0,0,0);
     -webkit-box-shadow: inset 0 0 0px rgba(0,0,0,0);
     background-color: white;
 }
@@ -77,33 +87,33 @@ font-size: 23px;
 `
 
 export const GoalNameButton = styled.button`
-    font-size: 19px;
+font-size: 19px;
+border: 0;
+background: #ccffcc;
+border-radius: 15px;
+padding: 3px 15px 3px 15px;
+cursor: pointer;
+float:right;
+position:relative;
+&:after{
+    display: none;
+    content: "Done";
+    position:absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    background-color: #80ff80;
     border: 0;
-    background: #ccffcc;
     border-radius: 15px;
-    padding: 3px 15px 3px 15px;
     cursor: pointer;
-    float:right;
-    position:relative;
-    &:after{
-        display: none;
-        content: "Done";
-        position:absolute;
-        width: 100%;
-        left: 0;
-        top: 0;
-        background-color: #80ff80;
-        border: 0;
-        border-radius: 15px;
-        cursor: pointer;
-        padding: 3px 0 3px 0;
-        /* color: white; */
-    }
-    &:hover:after {
-        display: block;
-    }
-    &:hover {
-        background: #b3ffb3;
-    }
-    
+    padding: 3px 0 3px 0;
+    /* color: white; */
+}
+&:hover:after {
+    display: block;
+}
+&:hover {
+    background: #b3ffb3;
+}
+
 `
