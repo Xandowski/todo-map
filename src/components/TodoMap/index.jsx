@@ -62,11 +62,6 @@ const removeGoal = async event => {
   console.log(result)
 }
 
-var percentColors = [
-  { pct: 0.0, color: { r: 0xff, g: 0xff, b: 0xff } },
-  { pct: 0.5, color: { r: 0xff, g: 0xff, b: 0 } },
-  { pct: 1.0, color: { r: 0, g: 0xff, b: 0 } } ];
-
 const getMax = (obj) =>{
   if (Object.keys(obj).length){
     return Object.keys(obj).reduce((a, b) => obj[a] > obj[b] ? a : b);
@@ -84,45 +79,13 @@ const getMin = (obj) =>{
 const getGreenIntensity = (input, max, min) => {
   var percent = ((input - min) * 100) / (max - min)
   return 'rgba(102, 255, 153,'+percent/100+')'
-
-  // if (percent < 50) {
-  //   percent = ((input - max) * 100) / (min - max)
-  //   return 'rgba(102, 255, 153,'+percent/100+')'
-  // }
-  // else if (percent < 75) {
-  //   var percent = ((input - min) * 100) / (max - min)
-  //   return 'rgba(255, 255, 153,'+percent/100+')'
-  // }
-  // return 'rgba(255, 50, 50,'+percent/100+')'
 }
-
-const doneGoal = async event => {
-  event.preventDefault()
-    
-  const res = await fetch(
-    '/api/goals/done',
-    {
-      body: JSON.stringify({
-        parentId: event.target.value,
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'POST'
-    }
-  )
-
-  const result = await res.json()
-  console.log(result)
-}
-
 const ToDoMap = () => {
     const [goals,setGoals]=useState([])
     const [goalsIntensity,setGoalsIntensity]=useState({})
     useEffect(() => { fetchGoals() }, [])
     const fetchGoals=async()=>{
       const response=await Axios('/api/goals');
-
       response.data.forEach((item)=>{
         if (!goalsIntensity[item._id]){
           goalsIntensity[item._id] = 30
@@ -132,22 +95,42 @@ const ToDoMap = () => {
       fetchGoalsLog()
     }
 
-    
-
     const [goalsLog,setGoalsLog]=useState([])
-    // useEffect(() => {  }, [])
-
     const fetchGoalsLog=async()=>{
       const response=await Axios('/api/goals/log');
-
       response.data.forEach((item)=>{
           goalsIntensity[item.parentId] = goalsIntensity[item.parentId] + -1
       })
-
       setGoalsIntensity(goalsIntensity)
       setGoalsLog(response.data)    
     }
-    // useEffect(()=>console.log(goals))
+    
+    const doneGoal = async (event) => {
+      event.preventDefault()
+      const res = await fetch(
+        '/api/goals/done',
+        {
+          body: JSON.stringify({
+            parentId: event.target.value,
+          }),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          method: 'POST'
+        }
+      )
+      const result = await res.json()
+      if (goalsIntensity[result.parentId]){
+        goalsIntensity[result.parentId]  = goalsIntensity[result.parentId] - 1
+      } else {
+        goalsIntensity[result.parentId] = 30
+      }
+      setGoalsIntensity(goalsIntensity)
+      goalsLog.push(result)
+      setGoalsLog(goalsLog)
+      setGoals([...goals])
+    }
+
     return (
         <Container>
             <Col>
@@ -182,5 +165,4 @@ const ToDoMap = () => {
         </Container>
     )
   }
-  
 export default ToDoMap
