@@ -81,35 +81,20 @@ const getMin = (obj) =>{
   return 1
 }
 
-const getGreenToRed = (input=1,min,max) => {
+const getGreenIntensity = (input, max, min) => {
   var percent = ((input - min) * 100) / (max - min)
-  const r = 255 * percent/100;
-  const g = 255 - (255 * percent/100);
-  return 'rgb('+r+','+g+',0)';
+  return 'rgba(102, 255, 153,'+percent/100+')'
+
+  // if (percent < 50) {
+  //   percent = ((input - max) * 100) / (min - max)
+  //   return 'rgba(102, 255, 153,'+percent/100+')'
+  // }
+  // else if (percent < 75) {
+  //   var percent = ((input - min) * 100) / (max - min)
+  //   return 'rgba(255, 255, 153,'+percent/100+')'
+  // }
+  // return 'rgba(255, 50, 50,'+percent/100+')'
 }
-
-var getColorForPercentage = function(input=1,min,max) {
-  var pct = ((input - min) * 100) / (max - min)
-  for (var i = 1; i < percentColors.length - 1; i++) {
-      if (pct < percentColors[i].pct) {
-          break;
-      }
-  }
-
-  var lower = percentColors[i - 1];
-  var upper = percentColors[i];
-  var range = upper.pct - lower.pct;
-  var rangePct = (pct - lower.pct) / range;
-  var pctLower = 1 - rangePct;
-  var pctUpper = rangePct;
-  var color = {
-      r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),
-      g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),
-      b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)
-  };
-  return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';
-  // or output as hex if preferred
-};
 
 const doneGoal = async event => {
     event.preventDefault()
@@ -133,13 +118,21 @@ const doneGoal = async event => {
 
 const ToDoMap = () => {
     const [goals,setGoals]=useState([])
+    const [goalsIntensity,setGoalsIntensity]=useState({})
     useEffect(() => { fetchGoals() }, [])
     const fetchGoals=async()=>{
       const response=await Axios('/api/goals');
+
+      response.data.forEach((item)=>{
+        if (!goalsIntensity[item._id]){
+          goalsIntensity[item._id] = 30
+        }
+      })
+
       setGoals(response.data)    
     }
 
-    const [goalsImtensity,setGoalsIntensity]=useState({})
+    
 
     const [goalsLog,setGoalsLog]=useState([])
     useEffect(() => { fetchGoalsLog() }, [])
@@ -147,14 +140,10 @@ const ToDoMap = () => {
       const response=await Axios('/api/goals/log');
 
       response.data.forEach((item)=>{
-        if (goalsImtensity[item.parentId]){
-          goalsImtensity[item.parentId] = goalsImtensity[item.parentId] + 1
-        } else {
-          goalsImtensity[item.parentId] = 1
-        }
+          goalsIntensity[item.parentId] = goalsIntensity[item.parentId] + -1
       })
 
-      setGoalsIntensity(goalsImtensity)
+      setGoalsIntensity(goalsIntensity)
       setGoalsLog(response.data)    
     }
     // useEffect(()=>console.log(goals))
@@ -165,8 +154,8 @@ const ToDoMap = () => {
                   return (
                     <GoalRow>
                       <NameColumn  key={key}>
-                        <GoalNameButton value={item._id} onClick={doneGoal} style={{backgroundColor:getGreenToRed(goalsImtensity[item._id],goalsImtensity[getMin(goalsImtensity)],goalsImtensity[getMax(goalsImtensity)])}}>
-                          {item.name} {goalsImtensity[item._id]} 
+                        <GoalNameButton value={item._id} onClick={doneGoal} style={{backgroundColor:getGreenIntensity(goalsIntensity[item._id],goalsIntensity[getMin(goalsIntensity)],goalsIntensity[getMax(goalsIntensity)])}}>
+                          {item.name}
                         </GoalNameButton>
                       </NameColumn>
                     </GoalRow>
