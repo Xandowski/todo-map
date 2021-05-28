@@ -128,14 +128,15 @@ const ToDoMap = () => {
           goalsIntensity[item._id] = 30
         }
       })
-
       setGoals(response.data)    
+      fetchGoalsLog()
     }
 
     
 
     const [goalsLog,setGoalsLog]=useState([])
-    useEffect(() => { fetchGoalsLog() }, [])
+    // useEffect(() => {  }, [])
+
     const fetchGoalsLog=async()=>{
       const response=await Axios('/api/goals/log');
 
