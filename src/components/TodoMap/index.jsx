@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 import Axios from 'axios'
 import {
-    Container,
-    GoalRow,
-    DailyCell,
-    GoalColumn,
-    NameColumn,
-    Col,
-    GoalWapper,
-    GoalNameButton
-  } from './style'
+  Container,
+  GoalRow,
+  DailyCell,
+  GoalColumn,
+  NameColumn,
+  Col,
+  GoalWapper,
+  GoalNameButton
+} from './style'
 
 const getLast30days = () => {
-  var datesArray = []
+  const datesArray = []
   
   for (let i = 0; i < 30; i++){
-    let date = new Date(new Date().setDate(new Date().getDate() - i))
+    const date = new Date(new Date().setDate(new Date().getDate() - i))
     datesArray.push(date)
   }
   
@@ -25,21 +25,21 @@ const getLast30days = () => {
 function sameDay(d1, d2) {
   return d1.getFullYear() === d2.getFullYear() &&
     d1.getMonth() === d2.getMonth() &&
-    d1.getDate() === d2.getDate();
+    d1.getDate() === d2.getDate()
 }
 
 const haveDone =  (parentId,goalsLog,dateArrayItem) => {
-  var haveDone = 0
+  let haveDone = 0
   goalsLog.forEach((goalLogItem)=>{
     if (goalLogItem.parentId == parentId && sameDay(dateArrayItem,new Date(goalLogItem.createdAt))){
       haveDone = 1
     }
   })    
   if (haveDone){
-    return <DailyCell parentId={parentId} date={dateArrayItem} done></DailyCell>
-  } else {
-    return <DailyCell parentId={parentId} date={dateArrayItem}></DailyCell>
-  }                       
+    return <DailyCell parentId={parentId} date={dateArrayItem} done />
+  } 
+  return <DailyCell parentId={parentId} date={dateArrayItem} />
+                         
 }
 
 const removeGoal = async event => {
@@ -49,7 +49,7 @@ const removeGoal = async event => {
     '/api/goals/remove',
     {
       body: JSON.stringify({
-          parentId: event.target.value,
+        parentId: event.target.value,
       }),
       headers: {
         'Content-Type': 'application/json'
@@ -97,23 +97,23 @@ const getGreenIntensity = (input, max, min) => {
 }
 
 const doneGoal = async event => {
-    event.preventDefault()
+  event.preventDefault()
     
-    const res = await fetch(
-      '/api/goals/done',
-      {
-        body: JSON.stringify({
-            parentId: event.target.value,
-        }),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: 'POST'
-      }
-    )
+  const res = await fetch(
+    '/api/goals/done',
+    {
+      body: JSON.stringify({
+        parentId: event.target.value,
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'POST'
+    }
+  )
 
-    const result = await res.json()
-    console.log(result)
+  const result = await res.json()
+  console.log(result)
 }
 
 const ToDoMap = () => {
@@ -182,4 +182,4 @@ const ToDoMap = () => {
     )
   }
   
-  export default ToDoMap
+export default ToDoMap
