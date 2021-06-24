@@ -93,30 +93,97 @@ export const GoalNameButton = styled.button`
 font-size: 19px;
 border: 0;
 background: ${(props) => props.theme.colors.lightGrey};
-border: 2px solid ${(props) => props.theme.colors.lightGrey};
-border-radius: 15px;
+border: 2px solid transparent;
+border-radius: .3em;
 padding: 1px 15px 1px 15px;
 margin: 0;
 cursor: pointer;
 float:right;
 position:relative;
-&:after{
-    display: none;
-    content: "Done";
-    position:absolute;
-    width: 100%;
-    left: -2px;
-    top: -2px;
-    background-color: ${(props) => props.theme.colors.green};
-    border: 2px solid ${(props) => props.theme.colors.green};
-    border-radius: 15px;
-    cursor: pointer;
-    padding: 1px 0 1px 0;
-}
-&:hover:after {
-    display: block;
-}
 &:hover {
-    background: #b3ffb3;
+    background: #b3ffb3 !important;
 }
+`
+
+export const ModalCompleteTaskTitle = styled.h1`
+text-align: center;
+margin-bottom: .5em;
+`
+export const ModalCompleteTaskCloseButton = styled.a`
+position: absolute;
+right: .5em;
+top: .5em;
+color: #616161;
+`
+
+export const ModalCompleteTaskCompleteItButton = styled.div`
+.description, .link {
+  font-family: 'Amatic SC', cursive;
+  text-align: center;
+}
+
+.description {
+	font-size: 35px;
+  display: "flex";
+  justify-content: "center";
+}
+
+.btn {
+  border: none;
+  display: block;
+  text-align: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  background-color: #a5cea6;
+  padding: 12px 60px 17px 60px;
+  margin: 0 auto;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.20);
+  border-radius: 0.3em;
+}
+
+.btn span {
+  position: relative; 
+  z-index: 1;
+}
+
+.btn:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 630%;
+  width: 140%;
+  background: #4caf50;
+  -webkit-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+  -webkit-transform: translateX(-98%) translateY(-25%) rotate(45deg);
+  transform: translateX(-98%) translateY(-25%) rotate(45deg);
+}
+
+.btn:hover:after {
+  -webkit-transform: translateX(-9%) translateY(-25%) rotate(45deg);
+  transform: translateX(-9%) translateY(-25%) rotate(45deg);
+}
+
+.link {
+  font-size: 20px;
+  margin-top: 30px;
+}
+
+.link a {
+  color: #000;
+  font-size: 25px; 
+}
+
+svg{
+  vertical-align: bottom;
+  margin-left: 5px;
+}
+
 `
