@@ -130,17 +130,28 @@ const ToDoMap = () => {
       }
     })
     setGoals(response.data)
-    fetchGoalsLog()
+    fetchGoalsLog(response.data)
   }
 
   const [goalsLog, setGoalsLog] = useState([])
-  const fetchGoalsLog = async () => {
+  const fetchGoalsLog = async (goals) => {
     const response = await Axios('/api/goals/log');
     response.data.forEach((item) => {
       goalsIntensity[item.parentId] = goalsIntensity[item.parentId] + -1
+      goals.forEach((goal)=>{
+        if (goal._id === item.parentId){
+          if (!goal.intensity) {
+            goal.intensity = 29
+          } else {
+            goal.intensity = goal.intensity -1
+          }
+        }
+      })
     })
+    setGoals(goals)
     setGoalsIntensity(goalsIntensity)
     setGoalsLog(response.data)
+    console.log(goals)
   }
 
   const doneGoal = async (event) => {
@@ -173,7 +184,7 @@ const ToDoMap = () => {
   const [selectedGoal, setSelectedGoal_] = useState(false)
   function setSelectedGoal(goal) {
     setSelectedGoal_(goal);
-    setTimeout(()=>{openModal()},20);
+    setTimeout(() => { openModal() }, 20);
   }
 
   const [modalIsOpen, setModal] = useState(false)
@@ -184,57 +195,83 @@ const ToDoMap = () => {
     setModal(false);
   }
 
+  function revertGoalsOrder() {
+    var goalsTemp = [...goals].reverse();
+    setGoals(goalsTemp);
+  }
+
+  function orderByMostDone(){
+    function compare( a, b ) {
+      if ( a.intensity < b.intensity ){
+        return -1;
+      }
+      if ( a.intensity > b.intensity ){
+        return 1;
+      }
+      return 0;
+    }
+    var goalsTemp = [...goals]
+    goalsTemp.sort( compare )
+    setGoals(goalsTemp)
+  }
+
   return (
-    <Container>
-      <Col>
-        {goals.map((item, key) => {
-          return (
-            <GoalRow key={key}>
-              <NameColumn>
-                <GoalNameButton
-                  value={item._id}
-                  onClick={() => setSelectedGoal(item)}
-                  style={{ backgroundColor: getGreenIntensity(goalsIntensity[item._id], goalsIntensity[getMin(goalsIntensity)], goalsIntensity[getMax(goalsIntensity)]) }}>
-                  {item.name}
-                </GoalNameButton>
-              </NameColumn>
-            </GoalRow>
-          )
-        })}
-      </Col>
-      <Col>
-        <GoalWapper>
+    <div>
+      <Container>
+        <button onClick={revertGoalsOrder}>Reverse</button>
+        <button onClick={orderByMostDone}>MostDone</button>
+      </Container>
+      <Container>
+        <Col>
           {goals.map((item, key) => {
             return (
               <GoalRow key={key}>
-                <GoalColumn>
-                  <div>
-                    {getLast30days().map((dateArrayItem,key) => { return (<span key={key}> {haveDone(item._id, goalsLog, dateArrayItem)} </span>) })}
-                  </div>
-                  {/* <button value={item._id} onClick={removeGoal}>Remove</button> */}
-                </GoalColumn>
+                <NameColumn>
+                  <GoalNameButton
+                    value={item._id}
+                    onClick={() => setSelectedGoal(item)}
+                    style={{ backgroundColor: getGreenIntensity(goalsIntensity[item._id], goalsIntensity[getMin(goalsIntensity)], goalsIntensity[getMax(goalsIntensity)]) }}>
+                    {item.name}
+                  </GoalNameButton>
+                </NameColumn>
               </GoalRow>
             )
           })}
-        </GoalWapper>
-      </Col>
+        </Col>
+        <Col>
+          <GoalWapper>
+            {goals.map((item, key) => {
+              return (
+                <GoalRow key={key}>
+                  <GoalColumn>
+                    <div>
+                      {getLast30days().map((dateArrayItem, key) => { return (<span key={key}> {haveDone(item._id, goalsLog, dateArrayItem)} </span>) })}
+                    </div>
+                    {/* <button value={item._id} onClick={removeGoal}>Remove</button> */}
+                  </GoalColumn>
+                </GoalRow>
+              )
+            })}
+          </GoalWapper>
+        </Col>
 
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Example Modal"
-      >
-        <ModalCompleteTaskTitle>
-          {selectedGoal.name}
-        </ModalCompleteTaskTitle>
-        <ModalCompleteTaskCloseButton onClick={closeModal}>
-          <AiOutlineCloseCircle size={26} />
-        </ModalCompleteTaskCloseButton>
-        <ModalCompleteTaskCompleteItButton>
-          <button className="btn" value={selectedGoal._id} onClick={doneGoal}><span>Complete It <FaCheck size={22} /></span></button>
-        </ModalCompleteTaskCompleteItButton>
-      </Modal>
-    </Container>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Example Modal"
+        >
+          <ModalCompleteTaskTitle>
+            {selectedGoal.name}
+          </ModalCompleteTaskTitle>
+          <ModalCompleteTaskCloseButton onClick={closeModal}>
+            <AiOutlineCloseCircle size={26} />
+          </ModalCompleteTaskCloseButton>
+          <ModalCompleteTaskCompleteItButton>
+            <button className="btn" value={selectedGoal._id} onClick={doneGoal}><span>Complete It <FaCheck size={22} /></span></button>
+          </ModalCompleteTaskCompleteItButton>
+        </Modal>
+      </Container>
+    </div>
   )
 }
 export default ToDoMap
