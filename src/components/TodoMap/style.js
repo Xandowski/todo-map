@@ -10,12 +10,14 @@ max-width: 1000px;
 export const Col = styled.div`
 display: inline-block;
 vertical-align:top;
+padding: 0 .2em;
 `
 
 export const GoalRow = styled.div`
 white-space:nowrap;
-height: 28px;
 margin-bottom: 3px;
+height: 28px;
+line-height: 28px;
 `
 
 export const GoalColumn = styled.div`
@@ -27,10 +29,10 @@ overflow-x: scroll;
 overflow-y: hidden;
 max-width: 700px;
 @media (max-width: 960px) {
-    max-width: calc(100vw - 280px);
-    width: auto;
-    white-space: nowrap;
-  }
+  max-width: calc(100vw - 130px);
+  width: auto;
+  white-space: nowrap;
+}
 
 /* 
 max-width: calc(100vw - 260px);
@@ -38,37 +40,37 @@ width: auto;
 white-space: nowrap; */
 
 /* &:hover:before {
-    top: -12px;
+  top: -12px;
 }
 &:before{
-    content: '';
-    position: absolute;
-    top: -3px;
-    right: 0;
-    left: 0;
-    margin-bottom: 50px;
-    height: 100%;
-    background-image: linear-gradient(90deg,rgba(255, 255, 255, 0.0) 85%, rgba(255, 255, 255, 1) 95%);
+  content: '';
+  position: absolute;
+  top: -3px;
+  right: 0;
+  left: 0;
+  margin-bottom: 50px;
+  height: 100%;
+  background-image: linear-gradient(90deg,rgba(255, 255, 255, 0.0) 85%, rgba(255, 255, 255, 1) 95%);
 } */ 
 
 &::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 0px rgba(0,0,0,0);
-    -webkit-box-shadow: inset 0 0 0px rgba(0,0,0,0);
-    background-color: white;
+  box-shadow: inset 0 0 0px rgba(0,0,0,0);
+  -webkit-box-shadow: inset 0 0 0px rgba(0,0,0,0);
+  background-color: white;
 }
 
 &::-webkit-scrollbar{
-    height: 3px;
-    background-color: white;
+  height: 3px;
+  background-color: white;
 }
 
 &:hover::-webkit-scrollbar{
-    height: 12px;
-    background-color: white;
+  height: 12px;
+  background-color: white;
 }
 
 &::-webkit-scrollbar-thumb{
-    background-color: #d9d9d9;
+  background-color: #d9d9d9;
 }
 `
 
@@ -79,10 +81,15 @@ white-space: normal; /*Prevents child elements from inheriting nowrap.*/
 min-height: 28px;
 min-width: 30px;
 background: ${props => props.done ? props.theme.colors.green : props.theme.colors.lightGrey};
+@media (max-width: 960px) {
+  min-height: 15px;
+  min-width: 16px;
+}
 `
 
 export const NameColumn = styled.div`
-width: 250px;
+/* width: 180px; */
+width: 100%;
 margin: 0 5px 0 0;
 text-align: right;
 display: inline-block;
@@ -101,7 +108,11 @@ cursor: pointer;
 float:right;
 position:relative;
 &:hover {
-    background: #b3ffb3 !important;
+  background: #b3ffb3 !important;
+}
+@media (max-width: 960px) {
+  font-size: 14px;
+  padding: 1px 1px 1px 1px;
 }
 `
 
@@ -123,7 +134,7 @@ export const ModalCompleteTaskCompleteItButton = styled.div`
 }
 
 .description {
-	font-size: 35px;
+  font-size: 35px;
   display: "flex";
   justify-content: "center";
 }

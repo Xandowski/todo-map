@@ -3,6 +3,8 @@ import Axios from 'axios'
 import Modal from 'react-modal'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { FaCheck } from 'react-icons/fa'
+import * as OrderBy from './components/OrderByDropdown'
+import useWindowSize from "./components/UseWindowSize"
 
 import {
   Container,
@@ -97,7 +99,6 @@ const removeGoal = async event => {
   )
 
   const result = await res.json()
-  console.log(result)
 }
 
 const getMax = (obj) => {
@@ -118,7 +119,26 @@ const getGreenIntensity = (input, max, min) => {
   var percent = ((input - min) * 100) / (max - min)
   return 'rgba(102, 255, 153,' + percent / 100 + ')'
 }
+
+
+
 const ToDoMap = () => {
+
+  const [width, height] = useWindowSize();
+
+  function truncate(str) {
+    if (!width) return ""
+    if (width <= 960) {
+      var n = 10
+      if (str.length <= n) {
+        return str;
+      }
+      return str.substr(0, 6) + "..." + str.substring(str.length - 6);
+    } else {
+      return str
+    }
+  };
+  
   const [goals, setGoals] = useState([])
   const [goalsIntensity, setGoalsIntensity] = useState({})
   useEffect(() => { fetchGoals() }, [])
@@ -138,12 +158,12 @@ const ToDoMap = () => {
     const response = await Axios('/api/goals/log');
     response.data.forEach((item) => {
       goalsIntensity[item.parentId] = goalsIntensity[item.parentId] + -1
-      goals.forEach((goal)=>{
-        if (goal._id === item.parentId){
+      goals.forEach((goal) => {
+        if (goal._id === item.parentId) {
           if (!goal.intensity) {
             goal.intensity = 29
           } else {
-            goal.intensity = goal.intensity -1
+            goal.intensity = goal.intensity - 1
           }
         }
       })
@@ -151,7 +171,6 @@ const ToDoMap = () => {
     setGoals(goals)
     setGoalsIntensity(goalsIntensity)
     setGoalsLog(response.data)
-    console.log(goals)
   }
 
   const doneGoal = async (event) => {
@@ -183,9 +202,14 @@ const ToDoMap = () => {
 
   const [selectedGoal, setSelectedGoal_] = useState(false)
   function setSelectedGoal(goal) {
-    setSelectedGoal_(goal);
-    setTimeout(() => { openModal() }, 20);
+    setSelectedGoal_(goal)
   }
+
+  useEffect(() => {
+    if (selectedGoal) {
+      openModal()
+    }
+  }, [selectedGoal]);
 
   const [modalIsOpen, setModal] = useState(false)
   function openModal() {
@@ -197,29 +221,39 @@ const ToDoMap = () => {
 
   function revertGoalsOrder() {
     var goalsTemp = [...goals].reverse();
+    console.log(goalsTemp)
     setGoals(goalsTemp);
   }
 
-  function orderByMostDone(){
-    function compare( a, b ) {
-      if ( a.intensity < b.intensity ){
+  function OrderByCreatedDate() {
+    function compare(a, b) {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    }
+    var goalsTemp = [...goals]
+    goalsTemp.sort(compare)
+    setGoals(goalsTemp)
+  }
+
+  function orderByMostDone() {
+    function compare(a, b) {
+      if (a.intensity < b.intensity) {
         return -1;
       }
-      if ( a.intensity > b.intensity ){
+      if (a.intensity > b.intensity) {
         return 1;
       }
       return 0;
     }
     var goalsTemp = [...goals]
-    goalsTemp.sort( compare )
+    goalsTemp.sort(compare)
     setGoals(goalsTemp)
   }
-
   return (
     <div>
       <Container>
         <button onClick={revertGoalsOrder}>Reverse</button>
         <button onClick={orderByMostDone}>MostDone</button>
+        <button onClick={OrderByCreatedDate}>OrderByCreatedDate</button>
       </Container>
       <Container>
         <Col>
@@ -231,7 +265,7 @@ const ToDoMap = () => {
                     value={item._id}
                     onClick={() => setSelectedGoal(item)}
                     style={{ backgroundColor: getGreenIntensity(goalsIntensity[item._id], goalsIntensity[getMin(goalsIntensity)], goalsIntensity[getMax(goalsIntensity)]) }}>
-                    {item.name}
+                    {truncate(item.name)}
                   </GoalNameButton>
                 </NameColumn>
               </GoalRow>
