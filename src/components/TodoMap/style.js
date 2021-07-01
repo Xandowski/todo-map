@@ -10,7 +10,7 @@ max-width: 1000px;
 export const Col = styled.div`
 display: inline-block;
 vertical-align:top;
-padding: 0 .2em;
+padding: 2em .2em;
 `
 
 export const GoalRow = styled.div`
@@ -29,7 +29,12 @@ overflow-x: scroll;
 overflow-y: hidden;
 max-width: 700px;
 @media (max-width: 960px) {
-  max-width: calc(100vw - 130px);
+  max-width: calc(100vw - 180px);
+  width: auto;
+  white-space: nowrap;
+}
+@media (max-width: 420px) {
+  max-width: calc(100vw - 150px);
   width: auto;
   white-space: nowrap;
 }
@@ -81,7 +86,7 @@ white-space: normal; /*Prevents child elements from inheriting nowrap.*/
 min-height: 28px;
 min-width: 30px;
 background: ${props => props.done ? props.theme.colors.green : props.theme.colors.lightGrey};
-@media (max-width: 960px) {
+@media (max-width: 980px) {
   min-height: 15px;
   min-width: 16px;
 }

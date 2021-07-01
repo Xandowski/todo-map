@@ -128,7 +128,7 @@ const ToDoMap = () => {
 
   function truncate(str) {
     if (!width) return ""
-    if (width <= 960) {
+    if (width <= 420) {
       var n = 10
       if (str.length <= n) {
         return str;
