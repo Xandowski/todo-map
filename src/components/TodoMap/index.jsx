@@ -138,7 +138,7 @@ const ToDoMap = () => {
       return str
     }
   };
-  
+
   const [goals, setGoals] = useState([])
   const [goalsIntensity, setGoalsIntensity] = useState({})
   useEffect(() => { fetchGoals() }, [])
@@ -156,6 +156,10 @@ const ToDoMap = () => {
   const [goalsLog, setGoalsLog] = useState([])
   const fetchGoalsLog = async (goals) => {
     const response = await Axios('/api/goals/log');
+    goals.forEach((goal) => {
+      goal.intensity = 29
+    })
+    setGoals(goals)
     response.data.forEach((item) => {
       goalsIntensity[item.parentId] = goalsIntensity[item.parentId] + -1
       goals.forEach((goal) => {
