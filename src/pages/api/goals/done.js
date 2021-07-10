@@ -8,6 +8,7 @@ export default async (request, response) => {
   if (request.method === 'POST') {
     const { 
       parentId,
+      clientTimestamp
     } = request.body
 
     if (!parentId) {
@@ -31,8 +32,9 @@ export default async (request, response) => {
       return
     }
 
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const timeFix = new Date().getTime() - clientTimestamp
+    const now = new Date(new Date() - timeFix)
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
     const findDuplicate = await GoalsLogSchema.findOne({ parentId: parentId, createdAt: {$gte: today} })
 
     if (findDuplicate){

@@ -184,6 +184,7 @@ const ToDoMap = () => {
       {
         body: JSON.stringify({
           parentId: event.target.value,
+          clientTimestamp: new Date().getTime()
         }),
         headers: {
           'Content-Type': 'application/json'
