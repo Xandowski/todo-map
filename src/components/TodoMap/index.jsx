@@ -179,12 +179,14 @@ const ToDoMap = () => {
 
   const doneGoal = async (event) => {
     event.preventDefault()
+    
     const res = await fetch(
       '/api/goals/done',
       {
         body: JSON.stringify({
           parentId: event.target.value,
-          clientTimestamp: new Date().getTime()
+          clientTimestamp: new Date().getTime(),
+          offset: -(new Date().getTimezoneOffset()/60)
         }),
         headers: {
           'Content-Type': 'application/json'
