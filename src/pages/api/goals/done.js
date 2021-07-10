@@ -38,17 +38,22 @@ export default async (request, response) => {
     const findDuplicate = await GoalsLogSchema.findOne({ parentId: parentId, createdAt: {$gte: today} })
 
     if (findDuplicate){
-      response.status(200).json({ message: 'Already done' })
+      response.status(200).json({
+        message: 'Already done',
+        timeFix : timeFix,
+        now : now,
+        today : today
+      })
       return
     }
     
-    const dbResponse = GoalsLogSchema.create({
+    const dbResponse = await GoalsLogSchema.create({
       parentId,
       owner:session.userId,
       createdAt: new Date()
     })
 
-    response.status(200).json(await dbResponse)
+    response.status(200).json(dbResponse)
     return
 
   } else {
