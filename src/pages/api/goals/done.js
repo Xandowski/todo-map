@@ -38,9 +38,8 @@ export default async (request, response) => {
     const now = new Date()
     now.setHours(now.getHours()+offset)
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    today.setHours(today.getHours()+offset)
     const findDuplicate = await GoalsLogSchema.findOne({ parentId: parentId, createdAt: {$gte: today} })
-    
+
     if (findDuplicate){
       const alreadyDone = {
         "message" : 'Already done',
