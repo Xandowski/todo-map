@@ -8,7 +8,6 @@ export default async (request, response) => {
   if (request.method === 'POST') {
     const { 
       parentId,
-      clientTimestamp,
       offset
     } = request.body
 
@@ -16,6 +15,11 @@ export default async (request, response) => {
       response.status(400).json({ message: 'Missing parent id' })
       return
     } 
+
+    if (offset < -12 || offset > 14 ){
+      response.status(400).json({ message: 'Invalid timezone' })
+      return
+    }
 
     const cookies = new Cookies(request, response)
     const sessionToken = cookies.get(process.env.NEXTAUTH_URL == 'http://localhost:3000' ? 'next-auth.session-token' : '__Secure-next-auth.session-token')
@@ -33,8 +37,6 @@ export default async (request, response) => {
       return
     }
 
-    const timeFix = new Date().getTime() - clientTimestamp
-    
     const now = new Date()
     now.setHours(now.getHours() + offset)
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
@@ -43,9 +45,6 @@ export default async (request, response) => {
     if (findDuplicate){
       const alreadyDone = {
         "message" : 'Already done',
-        "timeFix"  : timeFix,
-        "now"  : now,
-        "today"  : today,
         "parent" : findDuplicate
       }
       response.status(400).json(alreadyDone)

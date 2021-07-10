@@ -185,7 +185,6 @@ const ToDoMap = () => {
       {
         body: JSON.stringify({
           parentId: event.target.value,
-          clientTimestamp: new Date().getTime(),
           offset: -(new Date().getTimezoneOffset()/60)
         }),
         headers: {
