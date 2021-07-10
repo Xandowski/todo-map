@@ -36,7 +36,7 @@ export default async (request, response) => {
     const timeFix = new Date().getTime() - clientTimestamp
     
     const now = new Date()
-    now.setHours(now.getHours()+offset)
+    now.setHours(now.getHours() + offset)
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
     const findDuplicate = await GoalsLogSchema.findOne({ parentId: parentId, createdAt: {$gte: today} })
 
@@ -55,7 +55,7 @@ export default async (request, response) => {
     const dbResponse = await GoalsLogSchema.create({
       parentId,
       owner:session.userId,
-      createdAt: new Date()
+      createdAt: now
     })
 
     response.status(200).json(dbResponse)
