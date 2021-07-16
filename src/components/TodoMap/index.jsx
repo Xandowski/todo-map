@@ -120,8 +120,6 @@ const getGreenIntensity = (input, max, min) => {
   return 'rgba(102, 255, 153,' + percent / 100 + ')'
 }
 
-
-
 const ToDoMap = () => {
 
   const [width, height] = useWindowSize();
@@ -209,13 +207,16 @@ const ToDoMap = () => {
   const [selectedGoal, setSelectedGoal_] = useState(false)
   function setSelectedGoal(goal) {
     setSelectedGoal_(goal)
-  }
-
-  useEffect(() => {
-    if (selectedGoal) {
+    if (selectedGoal._id){
       openModal()
     }
-  }, [selectedGoal]);
+  }
+
+  // useEffect(() => {
+  //   if (selectedGoal) {
+  //     openModal()
+  //   }
+  // }, [selectedGoal]);
 
   const [modalIsOpen, setModal] = useState(false)
   function openModal() {
