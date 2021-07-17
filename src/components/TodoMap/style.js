@@ -1,5 +1,10 @@
 import styled from 'styled-components'
 
+export const GoaldAndCellsContainer = styled.div`
+display: flex;
+justify-content: center;
+`
+
 export const Container = styled.div`
 background-color: white;
 margin: auto;
@@ -99,6 +104,7 @@ margin: 0 5px 0 0;
 text-align: right;
 display: inline-block;
 font-size: 23px;
+padding-top: 19px;
 `
 
 export const GoalNameButton = styled.button`
@@ -119,87 +125,4 @@ position:relative;
   font-size: 14px;
   padding: 1px 1px 1px 1px;
 }
-`
-
-export const ModalCompleteTaskTitle = styled.h1`
-text-align: center;
-margin-bottom: .5em;
-`
-export const ModalCompleteTaskCloseButton = styled.a`
-position: absolute;
-right: .5em;
-top: .5em;
-color: #616161;
-`
-
-export const ModalCompleteTaskCompleteItButton = styled.div`
-.description, .link {
-  font-family: 'Amatic SC', cursive;
-  text-align: center;
-}
-
-.description {
-  font-size: 35px;
-  display: "flex";
-  justify-content: "center";
-}
-
-.btn {
-  border: none;
-  display: block;
-  text-align: center;
-  cursor: pointer;
-  text-transform: uppercase;
-  outline: none;
-  overflow: hidden;
-  position: relative;
-  color: #fff;
-  font-weight: 700;
-  font-size: 15px;
-  background-color: #a5cea6;
-  padding: 12px 60px 17px 60px;
-  margin: 0 auto;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.20);
-  border-radius: 0.3em;
-}
-
-.btn span {
-  position: relative; 
-  z-index: 1;
-}
-
-.btn:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 630%;
-  width: 140%;
-  background: #4caf50;
-  -webkit-transition: all .3s ease-in-out;
-  transition: all .3s ease-in-out;
-  -webkit-transform: translateX(-98%) translateY(-25%) rotate(45deg);
-  transform: translateX(-98%) translateY(-25%) rotate(45deg);
-}
-
-.btn:hover:after {
-  -webkit-transform: translateX(-9%) translateY(-25%) rotate(45deg);
-  transform: translateX(-9%) translateY(-25%) rotate(45deg);
-}
-
-.link {
-  font-size: 20px;
-  margin-top: 30px;
-}
-
-.link a {
-  color: #000;
-  font-size: 25px; 
-}
-
-svg{
-  vertical-align: bottom;
-  margin-left: 5px;
-}
-
 `

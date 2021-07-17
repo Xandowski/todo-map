@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react"
 import Axios from 'axios'
-import Modal from 'react-modal'
-import { AiOutlineCloseCircle } from 'react-icons/ai'
-import { FaCheck } from 'react-icons/fa'
-
-import OrderByDropdown from './components/OrderByDropdown'
-import useWindowSize from "./components/UseWindowSize"
+import OrderByDropdown from './orderByDropdown'
+import GoalModal from './goalModal'
+import useWindowSize from "../../utils/useWindowSize"
 
 import {
   Container,
+  GoaldAndCellsContainer,
   GoalRow,
   DailyCell,
   GoalColumn,
@@ -16,41 +14,7 @@ import {
   Col,
   GoalWapper,
   GoalNameButton,
-  ModalCompleteTaskTitle,
-  ModalCompleteTaskCloseButton,
-  ModalCompleteTaskCompleteItButton
 } from './style'
-
-Modal.defaultStyles.content = {
-  position: "absolute",
-  top: '50%',
-  left: '50%',
-  right: 'auto',
-  bottom: 'auto',
-  marginRight: '-50%',
-  transform: 'translate(-50%, -50%)',
-  border: "1px solid #ccc",
-  background: "#fff",
-  overflow: "auto",
-  WebkitOverflowScrolling: "touch",
-  borderRadius: "1em",
-  outline: "none",
-  padding: "20px",
-  width: '100%',
-  maxWidth: "500px",
-  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px"
-}
-
-Modal.defaultStyles.overlay = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: "rgba(0, 0, 0, 0.555)"
-}
-
-Modal.setAppElement('body');
 
 const getLast30days = () => {
   const datesArray = []
@@ -98,7 +62,6 @@ const removeGoal = async event => {
       method: 'POST'
     }
   )
-
   const result = await res.json()
 }
 
@@ -178,13 +141,13 @@ const ToDoMap = () => {
 
   const doneGoal = async (event) => {
     event.preventDefault()
-    
+
     const res = await fetch(
       '/api/goals/done',
       {
         body: JSON.stringify({
           parentId: event.target.value,
-          offset: -(new Date().getTimezoneOffset()/60)
+          offset: -(new Date().getTimezoneOffset() / 60)
         }),
         headers: {
           'Content-Type': 'application/json'
@@ -193,7 +156,7 @@ const ToDoMap = () => {
       }
     )
     const result = await res.json()
-    if (result.message){
+    if (result.message) {
       alert(result.message)
     }
     if (goalsIntensity[result.parentId]) {
@@ -211,11 +174,10 @@ const ToDoMap = () => {
   const [selectedGoal, setSelectedGoal_] = useState(false)
   function setSelectedGoal(goal) {
     setSelectedGoal_(goal)
-    if (selectedGoal._id){
+    if (selectedGoal._id) {
       openModal()
     }
   }
-
   // useEffect(() => {
   //   if (selectedGoal) {
   //     openModal()
@@ -230,32 +192,32 @@ const ToDoMap = () => {
     setModal(false);
   }
 
-  function orderByCreatedDate(reverse=false) {
+  function orderByCreatedDate(reverse = false) {
     function compare(a, b) {
-      if (reverse){
+      if (reverse) {
         return -(new Date(b.createdAt) - new Date(a.createdAt));
       } else {
         return new Date(b.createdAt) - new Date(a.createdAt);
       }
-      
+
     }
     var goalsTemp = [...goals]
     goalsTemp.sort(compare)
     setGoals(goalsTemp)
   }
 
-  function orderByMostDone(reverse=false) {
+  function orderByMostDone(reverse = false) {
     function compare(a, b) {
       if (a.intensity < b.intensity) {
-        if(reverse){
-          return 1;  
+        if (reverse) {
+          return 1;
         } else {
           return -1;
         }
       }
       if (a.intensity > b.intensity) {
-        if(reverse){
-          return -1;  
+        if (reverse) {
+          return -1;
         } else {
           return 1;
         }
@@ -269,57 +231,42 @@ const ToDoMap = () => {
   return (
     <div>
       <Container>
-        <OrderByDropdown orderByMostDone={orderByMostDone} orderByCreatedDate={orderByCreatedDate}/>
-      </Container>
-      <Container>
-        <Col>
-          {goals.map((item, key) => {
-            return (
-              <GoalRow key={key}>
-                <NameColumn>
-                  <GoalNameButton
-                    value={item._id}
-                    onClick={() => setSelectedGoal(item)}
-                    style={{ backgroundColor: getGreenIntensity(goalsIntensity[item._id], goalsIntensity[getMin(goalsIntensity)], goalsIntensity[getMax(goalsIntensity)]) }}>
-                    {truncate(item.name)}
-                  </GoalNameButton>
-                </NameColumn>
-              </GoalRow>
-            )
-          })}
-        </Col>
-        <Col>
-          <GoalWapper>
+        <GoaldAndCellsContainer>
+          <Col>
             {goals.map((item, key) => {
               return (
                 <GoalRow key={key}>
-                  <GoalColumn>
-                    <div>
-                      {getLast30days().map((dateArrayItem, key) => { return (<span key={key}> {haveDone(item._id, goalsLog, dateArrayItem)} </span>) })}
-                    </div>
-                    {/* <button value={item._id} onClick={removeGoal}>Remove</button> */}
-                  </GoalColumn>
+                  <NameColumn>
+                    <GoalNameButton
+                      value={item._id}
+                      onClick={() => setSelectedGoal(item)}
+                      style={{ backgroundColor: getGreenIntensity(goalsIntensity[item._id], goalsIntensity[getMin(goalsIntensity)], goalsIntensity[getMax(goalsIntensity)]) }}>
+                      {truncate(item.name)}
+                    </GoalNameButton>
+                  </NameColumn>
                 </GoalRow>
               )
             })}
-          </GoalWapper>
-        </Col>
-
-        <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={closeModal}
-          contentLabel="Example Modal"
-        >
-          <ModalCompleteTaskTitle>
-            {selectedGoal.name}
-          </ModalCompleteTaskTitle>
-          <ModalCompleteTaskCloseButton onClick={closeModal}>
-            <AiOutlineCloseCircle size={26} />
-          </ModalCompleteTaskCloseButton>
-          <ModalCompleteTaskCompleteItButton>
-            <button className="btn" value={selectedGoal._id} onClick={doneGoal}><span>Complete It <FaCheck size={22} /></span></button>
-          </ModalCompleteTaskCompleteItButton>
-        </Modal>
+          </Col>
+          <Col>
+            <OrderByDropdown orderByMostDone={orderByMostDone} orderByCreatedDate={orderByCreatedDate} />
+            <GoalWapper>
+              {goals.map((item, key) => {
+                return (
+                  <GoalRow key={key}>
+                    <GoalColumn>
+                      <div>
+                        {getLast30days().map((dateArrayItem, key) => { return (<span key={key}> {haveDone(item._id, goalsLog, dateArrayItem)} </span>) })}
+                      </div>
+                      {/* <button value={item._id} onClick={removeGoal}>Remove</button> */}
+                    </GoalColumn>
+                  </GoalRow>
+                )
+              })}
+            </GoalWapper>
+          </Col>
+        </GoaldAndCellsContainer>
+       <GoalModal modalIsOpen={modalIsOpen} closeModal={closeModal} selectedGoal={selectedGoal} doneGoal={doneGoal}/>
       </Container>
     </div>
   )

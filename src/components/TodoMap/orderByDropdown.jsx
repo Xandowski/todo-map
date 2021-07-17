@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { IoIosArrowDown } from 'react-icons/io'
-import useOutsideClick from "../../../utils/useOutsideClick";
+import useOutsideClick from "../../utils/useOutsideClick";
 import { useRef } from "react";
 
 const Main = styled("div")`
@@ -9,7 +9,7 @@ const Main = styled("div")`
 
 const DropDownContainer = styled.div`
 text-align: right;
-padding-right: 30px;
+/* padding-right: 30px; */
 span {
   padding-top: 2px;
   font-family: 'Roboto';
@@ -31,7 +31,7 @@ const DropDownHeader = styled.button`
   font-family: 'Roboto';
   font-weight: 500;
   color: ${(props) => props.theme.colors.dark600};
-  min-width: 98px;
+  /* min-width: 98px; */
   svg {
     vertical-align: middle;
     color: #0099ff;
@@ -41,6 +41,7 @@ const DropDownHeader = styled.button`
 
 const DropDownListContainer = styled("div")`
 position: absolute;
+right: 0;
 background-color: #fff;
 border-radius: 3px;
 box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
