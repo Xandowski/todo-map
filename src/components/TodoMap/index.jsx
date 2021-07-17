@@ -48,24 +48,6 @@ const haveDone = (parentId, goalsLog, dateArrayItem) => {
 
 }
 
-const removeGoal = async event => {
-  event.preventDefault()
-
-  const res = await fetch(
-    '/api/goals/remove',
-    {
-      body: JSON.stringify({
-        parentId: event.target.value,
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'POST'
-    }
-  )
-  const result = await res.json()
-}
-
 const getMax = (obj) => {
   if (Object.keys(obj).length) {
     return Object.keys(obj).reduce((a, b) => obj[a] > obj[b] ? a : b);
@@ -259,7 +241,6 @@ const ToDoMap = () => {
                       <div>
                         {getLast30days().map((dateArrayItem, key) => { return (<span key={key}> {haveDone(item._id, goalsLog, dateArrayItem)} </span>) })}
                       </div>
-                      {/* <button value={item._id} onClick={removeGoal}>Remove</button> */}
                     </GoalColumn>
                   </GoalRow>
                 )

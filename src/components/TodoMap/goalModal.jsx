@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Modal from 'react-modal'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
-import { FaCheck } from 'react-icons/fa'
+import { FaCheck, FaTrash } from 'react-icons/fa'
 
 Modal.defaultStyles.content = {
   position: "absolute",
@@ -119,7 +119,29 @@ svg{
   margin-left: 5px;
 }
 `
+
+const removeGoal = async event => {
+  event.preventDefault()
+
+  console.log(event.target);
+
+  const res = await fetch(
+    '/api/goals/remove',
+    {
+      body: JSON.stringify({
+        parentId: event.target.value,
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'POST'
+    }
+  ).then(window.location.reload())
+  
+}
+
 export default function App(props) {
+  
   return (
     <Modal
     isOpen={props.modalIsOpen}
@@ -135,6 +157,9 @@ export default function App(props) {
     <ModalCompleteTaskCompleteItButton>
       <button className="btn" value={props.selectedGoal._id} onClick={props.doneGoal}><span>Complete It <FaCheck size={22} /></span></button>
     </ModalCompleteTaskCompleteItButton>
+    <div>
+      <button value={props.selectedGoal._id} onClick={removeGoal}>Delete</button>
+    </div>
     </Modal>
   )
 }
