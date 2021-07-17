@@ -193,6 +193,9 @@ const ToDoMap = () => {
       }
     )
     const result = await res.json()
+    if (result.message){
+      alert(result.message)
+    }
     if (goalsIntensity[result.parentId]) {
       goalsIntensity[result.parentId] = goalsIntensity[result.parentId] - 1
     } else {
