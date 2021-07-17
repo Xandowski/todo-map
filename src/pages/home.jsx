@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useSession } from 'next-auth/client'
 import Navbar from '../components/Navbar'
-import NewGoal from '../components/NewGoal'
 import ToDoMap from '../components/TodoMap'
 import Head from 'next/head'
 import Router from 'next/router'
@@ -28,9 +27,7 @@ const Home = () => {
       {(session && (
         <>
           <Navbar session={session}>
-            {/* <button onClick={() => signOut()}>Sair</button> */}
-            {<NewGoal></NewGoal>}
-            {<ToDoMap></ToDoMap>}
+            <ToDoMap></ToDoMap>
           </Navbar>
         </>
       )) ||

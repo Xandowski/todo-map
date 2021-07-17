@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import UserMenu from './userMenu'
 
 const MainContainer = styled.div`
+z-index: 1;
 position: fixed;
 padding: .5em .5em;
 background-color: white;

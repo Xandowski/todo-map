@@ -3,6 +3,7 @@ import Axios from 'axios'
 import OrderByDropdown from './orderByDropdown'
 import GoalModal from './goalModal'
 import useWindowSize from "../../utils/useWindowSize"
+import NewGoal from '../../components/NewGoal'
 
 import {
   Container,
@@ -268,6 +269,7 @@ const ToDoMap = () => {
         </GoaldAndCellsContainer>
        <GoalModal modalIsOpen={modalIsOpen} closeModal={closeModal} selectedGoal={selectedGoal} doneGoal={doneGoal}/>
       </Container>
+      <NewGoal/>
     </div>
   )
 }

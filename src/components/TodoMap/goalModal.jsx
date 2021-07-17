@@ -25,6 +25,7 @@ Modal.defaultStyles.content = {
 }
 
 Modal.defaultStyles.overlay = {
+  zIndex: 1,
   position: "fixed",
   top: 0,
   left: 0,
@@ -37,7 +38,9 @@ Modal.setAppElement('body');
 
 export const ModalCompleteTaskTitle = styled.h1`
 text-align: center;
-margin-bottom: .5em;
+margin-bottom: .8em;
+font-size: 32px;
+font-weight: 400;
 `
 export const ModalCompleteTaskCloseButton = styled.a`
 position: absolute;

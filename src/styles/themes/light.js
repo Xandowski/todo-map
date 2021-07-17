@@ -29,5 +29,11 @@ export default {
     light600:"#b3b3b3",
     light500:"#999999",
 
+    green900:"#009933",
+    green800:"#00cc44",
+    green700:"#00ff55",
+    green600:"#33ff77",
+    green500:"#66ff99",
+
   },
 }
