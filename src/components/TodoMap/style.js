@@ -34,7 +34,7 @@ overflow-x: scroll;
 overflow-y: hidden;
 max-width: 700px;
 @media (max-width: 960px) {
-  max-width: calc(100vw - 180px);
+  max-width: calc(100vw - 195px);
   width: auto;
   white-space: nowrap;
 }
