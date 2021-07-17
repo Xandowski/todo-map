@@ -10,7 +10,7 @@ max-width: 1000px;
 export const Col = styled.div`
 display: inline-block;
 vertical-align:top;
-padding: 2em .2em;
+padding: 0.5em .2em;
 `
 
 export const GoalRow = styled.div`
@@ -83,12 +83,12 @@ export const DailyCell = styled.div`
 border-radius: 0.3em;
 display: inline-block;
 white-space: normal; /*Prevents child elements from inheriting nowrap.*/
-min-height: 28px;
-min-width: 30px;
+min-height: 15px;
+min-width: 16px;
+margin-top: 7px;
 background: ${props => props.done ? props.theme.colors.green : props.theme.colors.lightGrey};
 @media (max-width: 980px) {
-  min-height: 15px;
-  min-width: 16px;
+  margin-top:0;
 }
 `
 

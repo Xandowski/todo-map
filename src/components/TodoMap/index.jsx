@@ -3,7 +3,8 @@ import Axios from 'axios'
 import Modal from 'react-modal'
 import { AiOutlineCloseCircle } from 'react-icons/ai'
 import { FaCheck } from 'react-icons/fa'
-import * as OrderBy from './components/OrderByDropdown'
+
+import OrderByDropdown from './components/OrderByDropdown'
 import useWindowSize from "./components/UseWindowSize"
 
 import {
@@ -226,28 +227,35 @@ const ToDoMap = () => {
     setModal(false);
   }
 
-  function revertGoalsOrder() {
-    var goalsTemp = [...goals].reverse();
-    console.log(goalsTemp)
-    setGoals(goalsTemp);
-  }
-
-  function OrderByCreatedDate() {
+  function orderByCreatedDate(reverse=false) {
     function compare(a, b) {
-      return new Date(b.createdAt) - new Date(a.createdAt);
+      if (reverse){
+        return -(new Date(b.createdAt) - new Date(a.createdAt));
+      } else {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      }
+      
     }
     var goalsTemp = [...goals]
     goalsTemp.sort(compare)
     setGoals(goalsTemp)
   }
 
-  function orderByMostDone() {
+  function orderByMostDone(reverse=false) {
     function compare(a, b) {
       if (a.intensity < b.intensity) {
-        return -1;
+        if(reverse){
+          return 1;  
+        } else {
+          return -1;
+        }
       }
       if (a.intensity > b.intensity) {
-        return 1;
+        if(reverse){
+          return -1;  
+        } else {
+          return 1;
+        }
       }
       return 0;
     }
@@ -258,9 +266,7 @@ const ToDoMap = () => {
   return (
     <div>
       <Container>
-        <button onClick={revertGoalsOrder}>Reverse</button>
-        <button onClick={orderByMostDone}>MostDone</button>
-        <button onClick={OrderByCreatedDate}>OrderByCreatedDate</button>
+        <OrderByDropdown orderByMostDone={orderByMostDone} orderByCreatedDate={orderByCreatedDate}/>
       </Container>
       <Container>
         <Col>

@@ -4,8 +4,8 @@ import {
   ThemeSwitchContext,
   ThemeSwitchProvider,
 } from '../contexts/ThemeSwitchContext'
-
 import { GlobalStyles } from '../styles/global'
+import '../utils/reset.css'
 
 export default function App({ Component, pageProps }) {
   const { toggleTheme } = useContext(ThemeSwitchContext)
