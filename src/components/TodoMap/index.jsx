@@ -117,7 +117,20 @@ const ToDoMap = () => {
         }
       })
     })
-    setGoals(goals)
+
+    function compare(a, b) {
+      if (a.intensity < b.intensity) {
+        return -1;
+      }
+      if (a.intensity > b.intensity) {
+        return 1;
+      }
+      return 0;
+    }
+    var goalsTemp = [...goals]
+    goalsTemp.sort(compare)
+    setGoals(goalsTemp)
+    
     setGoalsIntensity(goalsIntensity)
     setGoalsLog(response.data)
   }
@@ -248,9 +261,9 @@ const ToDoMap = () => {
             </GoalWapper>
           </Col>
         </GoaldAndCellsContainer>
-       <GoalModal modalIsOpen={modalIsOpen} closeModal={closeModal} selectedGoal={selectedGoal} doneGoal={doneGoal}/>
+        <GoalModal modalIsOpen={modalIsOpen} closeModal={closeModal} selectedGoal={selectedGoal} doneGoal={doneGoal} />
       </Container>
-      <NewGoal/>
+      <NewGoal />
     </div>
   )
 }

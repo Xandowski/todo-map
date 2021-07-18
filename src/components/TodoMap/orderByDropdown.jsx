@@ -101,7 +101,7 @@ export default function App(props) {
         <DropDownHeaderContainer>
           <span>Order by</span>
           <DropDownHeader onClick={toggling}>
-            {selectedOption || "Older"} <IoIosArrowDown />
+            {selectedOption || "Most done"} <IoIosArrowDown />
             {isOpen && (
               <DropDownListContainer>
                 <DropDownList>
