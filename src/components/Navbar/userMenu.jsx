@@ -73,7 +73,7 @@ export default function App(props) {
             {isOpen && (
               <DropDownListContainer>
                 <DropDownList>
-                  <ListItem  onClick={() => signOut()}>Sair</ListItem>
+                  <ListItem  onClick={() => signOut()}>Logout</ListItem>
                 </DropDownList>
               </DropDownListContainer>
             )}
