@@ -16,6 +16,7 @@ import {
   GoalWapper,
   GoalNameButton,
 } from './style'
+import { FaSleigh } from "react-icons/fa"
 
 const getLast30days = () => {
   const datesArray = []
@@ -46,6 +47,19 @@ const haveDone = (parentId, goalsLog, dateArrayItem) => {
   }
   return <DailyCell parentId={parentId} date={dateArrayItem} />
 
+}
+
+const haveDoneBoolean = (parentId, goalsLog, dateArrayItem) => {
+  let haveDone = 0
+  goalsLog.forEach((goalLogItem) => {
+    if (goalLogItem.parentId == parentId && sameDay(dateArrayItem, new Date(goalLogItem.createdAt))) {
+      haveDone = 1
+    }
+  })
+  if (haveDone) {
+    return true
+  }
+  return false
 }
 
 const getMax = (obj) => {
@@ -138,12 +152,38 @@ const ToDoMap = () => {
   const doneGoal = async (event) => {
     event.preventDefault()
 
+    function compare(a, b) {
+      if (a.intensity < b.intensity) {
+        return -1;
+      }
+      if (a.intensity > b.intensity) {
+        return 1;
+      }
+      return 0;
+    }
+    var goalsTemp = [...goals]
+    goalsTemp.sort(compare)
+    var lessDoneGoal = goalsTemp.pop()._id
+    var alreadyDoneToday = true
+    while (lessDoneGoal === event.target.value || alreadyDoneToday){
+      alreadyDoneToday = false
+      lessDoneGoal = goalsTemp.pop()._id
+      goalsLog.forEach((log)=>{
+        if (log.parentId === lessDoneGoal){
+          if (sameDay(new Date(log.createdAt),new Date())){
+            alreadyDoneToday = true
+          }
+        }      
+      })
+    }
+
     const res = await fetch(
       '/api/goals/done',
       {
         body: JSON.stringify({
           parentId: event.target.value,
-          offset: -(new Date().getTimezoneOffset() / 60)
+          offset: -(new Date().getTimezoneOffset() / 60),
+          lessDoneGoal:lessDoneGoal
         }),
         headers: {
           'Content-Type': 'application/json'

@@ -1,22 +1,24 @@
 import connect from '../../../utils/database'
 import SessionsSchema from '../../../models/sessions'
-// import GoalsSchema from '../../../models/goals'
 import GoalsLogSchema from '../../../models/goalsLog'
+import GoalsSchema from '../../../models/goals'
+import { ObjectID } from 'mongodb'
 import Cookies from 'cookies'
 
 export default async (request, response) => {
   if (request.method === 'POST') {
-    const { 
+    const {
       parentId,
-      offset
+      offset,
+      lessDoneGoal
     } = request.body
 
     if (!parentId) {
       response.status(400).json({ message: 'Missing parent id' })
       return
-    } 
+    }
 
-    if (offset < -12 || offset > 14 ){
+    if (offset < -12 || offset > 14) {
       response.status(400).json({ message: 'Invalid timezone' })
       return
     }
@@ -24,7 +26,7 @@ export default async (request, response) => {
     const cookies = new Cookies(request, response)
     const sessionToken = cookies.get(process.env.NEXTAUTH_URL == 'http://localhost:3000' ? 'next-auth.session-token' : '__Secure-next-auth.session-token')
 
-    if (!sessionToken){
+    if (!sessionToken) {
       response.status(400).json({ message: 'No permission' })
       return
     }
@@ -32,7 +34,7 @@ export default async (request, response) => {
     await connect()
     const session = await SessionsSchema.findOne({ sessionToken: sessionToken })
 
-    if (!session){
+    if (!session) {
       response.status(400).json({ message: 'No permission' })
       return
     }
@@ -40,20 +42,40 @@ export default async (request, response) => {
     const now = new Date()
     now.setHours(now.getHours() + offset)
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    const findDuplicate = await GoalsLogSchema.findOne({ parentId: parentId, createdAt: {$gte: today} })
+    const findDuplicate = await GoalsLogSchema.findOne({ parentId: parentId, createdAt: { $gte: today } })
 
-    if (findDuplicate){
+    if (findDuplicate) {
       const alreadyDone = {
-        "message" : 'Already done',
-        "parent" : findDuplicate
+        "message": 'Already done',
+        "parent": findDuplicate
       }
       response.status(400).json(alreadyDone)
       return
     }
-    
+
+    const parentGoal = await GoalsSchema.findById(parentId)
+    if (parentGoal.inProgress) {
+
+      await GoalsSchema.updateOne(
+        { _id: new ObjectID(parentId) },
+        {
+          $set: { inProgress: false }
+        }
+      )
+      
+      if (lessDoneGoal !== parentId){
+        await GoalsSchema.updateOne(
+          { _id: new ObjectID(lessDoneGoal) },
+          {
+            $set: { inProgress: true }
+          }
+          )
+      }
+    }
+
     const dbResponse = await GoalsLogSchema.create({
       parentId,
-      owner:session.userId,
+      owner: session.userId,
       createdAt: now
     })
 
@@ -65,5 +87,5 @@ export default async (request, response) => {
     return
 
   }
-  
+
 }

@@ -13,6 +13,9 @@ const GoalsSchema = new mongoose.Schema({
   type: {
     type: Number
   },
+  inProgress:{
+    type: Boolean
+  },
   createdAt: {
     type: Date,
     default: Date.now
