@@ -6,7 +6,6 @@ import Router from 'next/router'
 import Axios from 'axios'
 import Navbar from '../components/Navbar'
 import ToDoMap from '../components/TodoMap'
-import GoalInProgress from '../components/GoalInProgress'
 
 const Home = () => {
   const [session, loading] = useSession()
@@ -35,7 +34,6 @@ const Home = () => {
       {(session && (
         <>
           <Navbar session={session}>
-            <GoalInProgress goals={goals}></GoalInProgress>
             <ToDoMap></ToDoMap>
           </Navbar>
         </>

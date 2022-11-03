@@ -83,13 +83,45 @@ const App = (props) => {
 
   const [goalInProgress, setGoalInProgress] = useState()
 
+  function compare(a, b) {
+    if (a.intensity < b.intensity) {
+      return -1;
+    }
+    if (a.intensity > b.intensity) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function sameDay(d1, d2) {
+    return d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate()
+  }
+
   useEffect(() => {
-    props.goals.forEach(goal => {
-      if (goal.inProgress) {
-        console.log(goal)
-        setGoalInProgress(goal)
+    if (props.goals.length > 0) { 
+      var goalsTemp = [...props.goals]
+      goalsTemp.sort(compare)
+      var lessDoneGoal = undefined
+      var alreadyDoneToday = true
+
+      while (alreadyDoneToday){
+        alreadyDoneToday = false
+        lessDoneGoal = goalsTemp.pop()
+        props.goalsLog.forEach((log)=>{
+          if (log.parentId === lessDoneGoal._id){
+            if (sameDay(new Date(log.createdAt),new Date())){
+              alreadyDoneToday = true
+            }
+          }      
+        })
       }
-    });
+      console.log("lessDoneGoal", lessDoneGoal)
+      console.log(props.goals)
+      setGoalInProgress(lessDoneGoal);
+    }
+
   }, [props.goals])
 
   return (
@@ -102,7 +134,7 @@ const App = (props) => {
             </Clock>
             <div>
               <ComponentTag>
-                Goal in progress
+                Your next goal
               </ComponentTag>
               <GoalTitle>
                 {goalInProgress ? goalInProgress.name : "No goals in progress"}

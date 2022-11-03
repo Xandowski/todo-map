@@ -4,6 +4,7 @@ import OrderByDropdown from './orderByDropdown'
 import GoalModal from './goalModal'
 import useWindowSize from "../../utils/useWindowSize"
 import NewGoal from '../../components/NewGoal'
+import GoalInProgress from '../../components/GoalInProgress'
 
 import {
   Container,
@@ -266,6 +267,7 @@ const ToDoMap = () => {
   }
   return (
     <div>
+      <GoalInProgress goals={goals} goalsLog={goalsLog}></GoalInProgress>
       <Container>
         <GoaldAndCellsContainer>
           <Col>
