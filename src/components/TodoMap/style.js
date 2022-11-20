@@ -6,10 +6,10 @@ justify-content: center;
 `
 
 export const Container = styled.div`
-background-color: white;
 margin: auto;
 position: relative;
 max-width: 1000px;
+padding: .5em;
 `
 
 export const Col = styled.div`
@@ -30,8 +30,6 @@ white-space:nowrap;
 margin: 2em 0;
 height: 28px;
 line-height: 28px;
-display:flex;
-justify-content:space-between;
 `
 
 export const GoalColumn = styled.div`
@@ -139,8 +137,13 @@ height: 29px;
 `
 
 export const GoalTitle = styled.div`
+  color: white;
   font-size: 42px;
   line-height: 50px;
+  margin-bottom: .6em;
+  @media (max-width: 960px) {
+    font-size: 29px;
+  }
 `
 
 export const GoalDoneButton = styled.button`
@@ -150,5 +153,17 @@ export const GoalDoneButton = styled.button`
   background: ${(props) => props.theme.colors.lightGrey};
   &:hover {
     background: #b3ffb3 !important;
+  }
+`
+
+export const Wrapper = styled.div`
+  padding: 3em 0;
+  background: hsla(140, 100%, 34%, 1);
+  background: linear-gradient(hsla(140, 100%, 34%, 1) 0%, hsla(140, 64%, 55%, 1) 70%);
+  background: -moz-linear-gradient(hsla(140, 100%, 34%, 1) 0%, hsla(140, 64%, 55%, 1) 70%);
+  background: -webkit-linear-gradient(hsla(140, 100%, 34%, 1) 0%, hsla(140, 64%, 55%, 1) 70%);
+  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#00ac39", endColorstr="#43d674", GradientType=1 );
+  @media (max-width: 960px) {
+    padding: 1em 0;
   }
 `

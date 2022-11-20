@@ -7,8 +7,7 @@ import {
   Container,
   GoalTitle,
   GoalDoneButton,
-  RowBetween,
-  Col
+  Wrapper
 } from '../components/TodoMap/style'
 
 const App = () => {
@@ -38,10 +37,10 @@ const App = () => {
         'Content-Type': 'application/json'
       },
     })
-    .then((response) => response.json())
-    .then((response) => {
-      console.log(response)
-    })
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response)
+      })
   }
 
   return (
@@ -50,24 +49,20 @@ const App = () => {
         <title>Todo Map</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
-        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"/>
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" />
       </Head>
       {((goal && session) && (
         <>
           <Navbar session={session}>
+            <Wrapper>
             <Container>
-              <RowBetween>
-                <Col>
-                  <GoalTitle>{goal.name}</GoalTitle>
-                </Col>
-                <Col>
-                  <GoalDoneButton
-                  onClick={done}>
-                    Done
-                  </GoalDoneButton>
-                </Col>
-              </RowBetween>
+              <GoalTitle>{goal.name}</GoalTitle>
+              <GoalDoneButton
+                onClick={done}>
+                Done
+              </GoalDoneButton>
             </Container>
+            </Wrapper>
           </Navbar>
         </>
       )) ||
