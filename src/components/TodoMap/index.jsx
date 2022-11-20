@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react"
-import Axios from 'axios'
 import OrderByDropdown from './orderByDropdown'
-import GoalModal from './goalModal'
 import useWindowSize from "../../utils/useWindowSize"
 import NewGoal from '../../components/NewGoal'
 import GoalInProgress from '../../components/GoalInProgress'
+import Link from 'next/link'
 
 import {
   Container,
@@ -14,19 +13,16 @@ import {
   GoalColumn,
   NameColumn,
   Col,
-  GoalWapper,
+  GoalsWapper,
   GoalNameButton,
 } from './style'
-import { FaSleigh } from "react-icons/fa"
 
 const getLast30days = () => {
   const datesArray = []
-
   for (let i = 0; i < 30; i++) {
     const date = new Date(new Date().setDate(new Date().getDate() - i))
     datesArray.push(date)
   }
-
   return datesArray
 }
 
@@ -36,7 +32,7 @@ function sameDay(d1, d2) {
     d1.getDate() === d2.getDate()
 }
 
-const haveDone = (parentId, goalsLog, dateArrayItem) => {
+const getDailyCell = (parentId, goalsLog, dateArrayItem) => {
   let haveDone = 0
   goalsLog.forEach((goalLogItem) => {
     if (goalLogItem.parentId == parentId && sameDay(dateArrayItem, new Date(goalLogItem.createdAt))) {
@@ -47,224 +43,54 @@ const haveDone = (parentId, goalsLog, dateArrayItem) => {
     return <DailyCell parentId={parentId} date={dateArrayItem} done />
   }
   return <DailyCell parentId={parentId} date={dateArrayItem} />
-
 }
 
-const haveDoneBoolean = (parentId, goalsLog, dateArrayItem) => {
-  let haveDone = 0
-  goalsLog.forEach((goalLogItem) => {
-    if (goalLogItem.parentId == parentId && sameDay(dateArrayItem, new Date(goalLogItem.createdAt))) {
-      haveDone = 1
-    }
-  })
-  if (haveDone) {
-    return true
-  }
-  return false
-}
-
-const getMax = (obj) => {
-  if (Object.keys(obj).length) {
-    return Object.keys(obj).reduce((a, b) => obj[a] > obj[b] ? a : b);
-  }
-  return 1
-}
-
-const getMin = (obj) => {
-  if (Object.keys(obj).length) {
-    return Object.keys(obj).reduce((a, b) => obj[a] < obj[b] ? a : b);
-  }
-  return 1
-}
-
-const getGreenIntensity = (input, max, min) => {
+const getGreenIntensity = (input, goals) => {
+  let max = Math.max(...goals.map(goal => goal.intensity))
+  let min = Math.min(...goals.map(goal => goal.intensity))
   var percent = ((input - min) * 100) / (max - min)
   return 'rgba(102, 255, 153,' + percent / 100 + ')'
 }
 
-const ToDoMap = () => {
-
-  const [width, height] = useWindowSize();
-
-  function truncate(str) {
-    if (!width) return ""
-    if (width <= 420) {
-      var n = 10
-      if (str.length <= n) {
-        return str;
-      }
-      return str.substr(0, 6) + "..." + str.substring(str.length - 6);
-    } else {
-      return str
+const truncate = (str, width) => {
+  if (!width) return ""
+  if (width <= 500) {
+    var n = 10
+    if (str.length <= n) {
+      return str;
     }
-  };
+    return str.substr(0, 6) + "..." + str.substring(str.length - 6);
+  } else {
+    return str
+  }
+};
 
+const treatGoals = (goals, goalsLog) => {
+  goals.forEach((goal) => {
+    goal.intensity = goalsLog.filter(log => { return log.parentId == goal._id }).length
+  })
+  goals.sort((a, b) => { return a.intensity > b.intensity ? -1 : 1 });
+  return goals
+}
+
+const App = () => {
+  const [width, height] = useWindowSize()
   const [goals, setGoals] = useState([])
-  const [goalsIntensity, setGoalsIntensity] = useState({})
-  useEffect(() => { fetchGoals() }, [])
-  const fetchGoals = async () => {
-    const response = await Axios('/api/goals');
-    response.data.forEach((item) => {
-      if (!goalsIntensity[item._id]) {
-        goalsIntensity[item._id] = 30
-      }
-    })
-    setGoals(response.data)
-    fetchGoalsLog(response.data)
-  }
-
   const [goalsLog, setGoalsLog] = useState([])
-  const fetchGoalsLog = async (goals) => {
-    const response = await Axios('/api/goals/log');
-    goals.forEach((goal) => {
-      goal.intensity = 29
-    })
-    setGoals(goals)
-    response.data.forEach((item) => {
-      goalsIntensity[item.parentId] = goalsIntensity[item.parentId] + -1
-      goals.forEach((goal) => {
-        if (goal._id === item.parentId) {
-          if (!goal.intensity) {
-            goal.intensity = 29
-          } else {
-            goal.intensity = goal.intensity - 1
-          }
-        }
+  useEffect(() => {
+    fetch('/api/goals')
+      .then((goals) => goals.json())
+      .then((goals) => {
+        setGoals(goals)
+        fetch('/api/goals/log')
+          .then((goalLogs) => goalLogs.json())
+          .then((goalLogs) => {
+            setGoalsLog(goalLogs)
+            const treatedGoals = treatGoals(goals, goalLogs)
+            setGoals([...treatedGoals])
+          })
       })
-    })
-
-    function compare(a, b) {
-      if (a.intensity < b.intensity) {
-        return -1;
-      }
-      if (a.intensity > b.intensity) {
-        return 1;
-      }
-      return 0;
-    }
-    var goalsTemp = [...goals]
-    goalsTemp.sort(compare)
-    setGoals(goalsTemp)
-    
-    setGoalsIntensity(goalsIntensity)
-    setGoalsLog(response.data)
-  }
-
-  const doneGoal = async (event) => {
-    event.preventDefault()
-
-    function compare(a, b) {
-      if (a.intensity < b.intensity) {
-        return -1;
-      }
-      if (a.intensity > b.intensity) {
-        return 1;
-      }
-      return 0;
-    }
-    var goalsTemp = [...goals]
-    goalsTemp.sort(compare)
-    var lessDoneGoal = goalsTemp.pop()._id
-    var alreadyDoneToday = true
-    while (lessDoneGoal === event.target.value || alreadyDoneToday){
-      alreadyDoneToday = false
-      lessDoneGoal = goalsTemp.pop()._id
-      goalsLog.forEach((log)=>{
-        if (log.parentId === lessDoneGoal){
-          if (sameDay(new Date(log.createdAt),new Date())){
-            alreadyDoneToday = true
-          }
-        }      
-      })
-    }
-
-    const res = await fetch(
-      '/api/goals/done',
-      {
-        body: JSON.stringify({
-          parentId: event.target.value,
-          offset: -(new Date().getTimezoneOffset() / 60),
-          lessDoneGoal:lessDoneGoal
-        }),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: 'POST'
-      }
-    )
-    const result = await res.json()
-    if (result.message) {
-      alert(result.message)
-    }
-    if (goalsIntensity[result.parentId]) {
-      goalsIntensity[result.parentId] = goalsIntensity[result.parentId] - 1
-    } else {
-      goalsIntensity[result.parentId] = 30
-    }
-    setGoalsIntensity(goalsIntensity)
-    goalsLog.push(result)
-    setGoalsLog(goalsLog)
-    setGoals([...goals])
-    closeModal()
-  }
-
-  const [selectedGoal, setSelectedGoal_] = useState(false)
-  function setSelectedGoal(goal) {
-    setSelectedGoal_(goal)
-    if (selectedGoal._id) {
-      openModal()
-    }
-  }
-  // useEffect(() => {
-  //   if (selectedGoal) {
-  //     openModal()
-  //   }
-  // }, [selectedGoal]);
-
-  const [modalIsOpen, setModal] = useState(false)
-  function openModal() {
-    setModal(true);
-  }
-  function closeModal() {
-    setModal(false);
-  }
-
-  function orderByCreatedDate(reverse = false) {
-    function compare(a, b) {
-      if (reverse) {
-        return -(new Date(b.createdAt) - new Date(a.createdAt));
-      } else {
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      }
-
-    }
-    var goalsTemp = [...goals]
-    goalsTemp.sort(compare)
-    setGoals(goalsTemp)
-  }
-
-  function orderByMostDone(reverse = false) {
-    function compare(a, b) {
-      if (a.intensity < b.intensity) {
-        if (reverse) {
-          return 1;
-        } else {
-          return -1;
-        }
-      }
-      if (a.intensity > b.intensity) {
-        if (reverse) {
-          return -1;
-        } else {
-          return 1;
-        }
-      }
-      return 0;
-    }
-    var goalsTemp = [...goals]
-    goalsTemp.sort(compare)
-    setGoals(goalsTemp)
-  }
+  }, [])
   return (
     <div>
       <GoalInProgress goals={goals} goalsLog={goalsLog}></GoalInProgress>
@@ -275,38 +101,45 @@ const ToDoMap = () => {
               return (
                 <GoalRow key={key}>
                   <NameColumn>
+                    <Link
+                      href={{ pathname: '/goal', query: { id: item._id } }}
+                    >
                     <GoalNameButton
                       value={item._id}
-                      onClick={() => setSelectedGoal(item)}
-                      style={{ backgroundColor: getGreenIntensity(goalsIntensity[item._id], goalsIntensity[getMin(goalsIntensity)], goalsIntensity[getMax(goalsIntensity)]) }}>
-                      {truncate(item.name)}
+                      style={{ backgroundColor: getGreenIntensity(item.intensity, goals) }}>
+                      {truncate(item.name, width)}
                     </GoalNameButton>
+                    </Link>
                   </NameColumn>
                 </GoalRow>
               )
             })}
           </Col>
           <Col>
-            <OrderByDropdown orderByMostDone={orderByMostDone} orderByCreatedDate={orderByCreatedDate} />
-            <GoalWapper>
+            <OrderByDropdown goals={goals} setGoals={setGoals} />
+            <GoalsWapper>
               {goals.map((item, key) => {
                 return (
                   <GoalRow key={key}>
                     <GoalColumn>
                       <div>
-                        {getLast30days().map((dateArrayItem, key) => { return (<span key={key}> {haveDone(item._id, goalsLog, dateArrayItem)} </span>) })}
+                        {getLast30days().map((dateArrayItem, key) => {
+                          return (
+                            <span key={key}>
+                              {getDailyCell(item._id, goalsLog, dateArrayItem)}
+                            </span>)
+                        })}
                       </div>
                     </GoalColumn>
                   </GoalRow>
                 )
               })}
-            </GoalWapper>
+            </GoalsWapper>
           </Col>
         </GoaldAndCellsContainer>
-        <GoalModal modalIsOpen={modalIsOpen} closeModal={closeModal} selectedGoal={selectedGoal} doneGoal={doneGoal} />
       </Container>
       <NewGoal />
     </div>
   )
 }
-export default ToDoMap
+export default App

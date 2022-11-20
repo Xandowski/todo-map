@@ -10,7 +10,7 @@ export default async (request, response) => {
     const {
       parentId,
       offset,
-      lessDoneGoal
+      // lessDoneGoal
     } = request.body
 
     if (!parentId) {
@@ -63,14 +63,14 @@ export default async (request, response) => {
         }
       )
       
-      if (lessDoneGoal !== parentId){
-        await GoalsSchema.updateOne(
-          { _id: new ObjectID(lessDoneGoal) },
-          {
-            $set: { inProgress: true }
-          }
-          )
-      }
+      // if (lessDoneGoal !== parentId){
+      //   await GoalsSchema.updateOne(
+      //     { _id: new ObjectID(lessDoneGoal) },
+      //     {
+      //       $set: { inProgress: true }
+      //     }
+      //     )
+      // }
     }
 
     const dbResponse = await GoalsLogSchema.create({

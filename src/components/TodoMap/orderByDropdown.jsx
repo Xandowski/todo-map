@@ -61,37 +61,54 @@ padding: 10px 25px;
 const options = ["Most done", "Less done", "Older", "Newest"];
 
 export default function App(props) {
-
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
 
   const toggling = () => setIsOpen(!isOpen)
-
   const ref = useRef()
-  useOutsideClick(ref,()=>{
+
+  useOutsideClick(ref, () => {
     setIsOpen(false)
   })
-  
+
+  const orderByCreatedDate = (reverse = false) => {
+    let goalsTemp = [...props.goals]
+    if (reverse) {
+      goalsTemp.sort((a, b) => { return -(new Date(b.createdAt) - new Date(a.createdAt)) })
+    } else {
+      goalsTemp.sort((a, b) => { return new Date(b.createdAt) - new Date(a.createdAt) })
+    }
+    props.setGoals(goalsTemp);
+  }
+
+  const orderByMostDone = (reverse = false) => {
+    let goalsTemp = [...props.goals]
+    if (reverse) {
+      goalsTemp.sort((a, b) => {return a.intensity < b.intensity ? -1 : 1
+      });
+    } else {
+      goalsTemp.sort((a, b) => { return a.intensity > b.intensity ? -1 : 1 });
+    }
+    props.setGoals(goalsTemp);
+  }
+
   const onOptionClicked = value => () => {
     setSelectedOption(value)
-    
+
     switch (value) {
       case "Most done":
-        console.log('case "Most done":')
-        props.orderByMostDone()
+        orderByMostDone()
         break
       case "Less done":
-        console.log('case "Less done":')
-        props.orderByMostDone(true)
+        orderByMostDone(true)
         break
       case "Older":
-        props.orderByCreatedDate(true)
+        orderByCreatedDate(true)
         break
       case "Newest":
-        props.orderByCreatedDate()
+        orderByCreatedDate()
         break
     }
-    
     setIsOpen(false)
   };
 

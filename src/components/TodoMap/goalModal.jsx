@@ -122,9 +122,6 @@ svg{
 
 const removeGoal = async event => {
   event.preventDefault()
-
-  console.log(event.target);
-
   const res = await fetch(
     '/api/goals/remove',
     {

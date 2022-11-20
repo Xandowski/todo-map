@@ -125,7 +125,6 @@ export default function App(props) {
     ).then(window.location.reload())
 
     const result = await res.json()
-    console.log(result)
   }
 
   return (

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import Axios from 'axios'
 import styled from 'styled-components'
 import { Container } from '../../styles/base'
 
@@ -79,51 +78,35 @@ const Clock = styled.div`
 }
 `
 
+function sameDay(d1, d2) {
+  return d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+}
+
 const App = (props) => {
-
   const [goalInProgress, setGoalInProgress] = useState()
-
-  function compare(a, b) {
-    if (a.intensity < b.intensity) {
-      return -1;
-    }
-    if (a.intensity > b.intensity) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function sameDay(d1, d2) {
-    return d1.getFullYear() === d2.getFullYear() &&
-      d1.getMonth() === d2.getMonth() &&
-      d1.getDate() === d2.getDate()
-  }
-
   useEffect(() => {
-    if (props.goals.length > 0) { 
+    if (props.goals.length > 0) {
       var goalsTemp = [...props.goals]
-      goalsTemp.sort(compare)
+      goalsTemp.sort((a, b) => a.name.localeCompare(b.name))
+      goalsTemp.sort((a, b) => a.intensity < b.intensity ? -1 : 0)
       var lessDoneGoal = undefined
       var alreadyDoneToday = true
-
-      while (alreadyDoneToday){
+      while (alreadyDoneToday) {
         alreadyDoneToday = false
-        lessDoneGoal = goalsTemp.pop()
-        props.goalsLog.forEach((log)=>{
-          if (log.parentId === lessDoneGoal._id){
-            if (sameDay(new Date(log.createdAt),new Date())){
+        lessDoneGoal = goalsTemp[0]
+        props.goalsLog.forEach((log) => {
+          if (log.parentId === lessDoneGoal._id) {
+            if (sameDay(new Date(log.createdAt), new Date())) {
               alreadyDoneToday = true
             }
-          }      
+          }
         })
       }
-      console.log("lessDoneGoal", lessDoneGoal)
-      console.log(props.goals)
       setGoalInProgress(lessDoneGoal);
     }
-
   }, [props.goals])
-
   return (
     <div>
       <Container>
@@ -145,6 +128,5 @@ const App = (props) => {
       </Container>
     </div>
   )
-
 }
 export default App

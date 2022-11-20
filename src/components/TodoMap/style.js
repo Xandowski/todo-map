@@ -25,11 +25,20 @@ height: 28px;
 line-height: 28px;
 `
 
+export const RowBetween = styled.div`
+white-space:nowrap;
+margin: 2em 0;
+height: 28px;
+line-height: 28px;
+display:flex;
+justify-content:space-between;
+`
+
 export const GoalColumn = styled.div`
 display: inline-block;
 `
 
-export const GoalWapper = styled.div`
+export const GoalsWapper = styled.div`
 overflow-x: scroll;
 overflow-y: hidden;
 max-width: 700px;
@@ -90,6 +99,7 @@ display: inline-block;
 white-space: normal; /*Prevents child elements from inheriting nowrap.*/
 min-height: 15px;
 min-width: 16px;
+margin-right:1px;
 margin-top: 7px;
 background: ${props => props.done ? props.theme.colors.green : props.theme.colors.lightGrey};
 @media (max-width: 980px) {
@@ -108,12 +118,12 @@ padding-top: 19px;
 `
 
 export const GoalNameButton = styled.button`
-font-size: 19px;
+font-size: 18px;
 border: 0;
 background: ${(props) => props.theme.colors.lightGrey};
 border: 2px solid transparent;
 border-radius: .3em;
-padding: 1px 15px 1px 15px;
+padding: 1px 10px 1px 10px;
 margin: 0;
 cursor: pointer;
 float:right;
@@ -123,6 +133,22 @@ position:relative;
 }
 @media (max-width: 960px) {
   font-size: 14px;
-  padding: 1px 1px 1px 1px;
+  padding: 1px 5px 1px 5px;
 }
+height: 29px;
+`
+
+export const GoalTitle = styled.div`
+  font-size: 42px;
+  line-height: 50px;
+`
+
+export const GoalDoneButton = styled.button`
+  font-size: 19px;
+  padding: .6em 1em;
+  border-radius: .3em;
+  background: ${(props) => props.theme.colors.lightGrey};
+  &:hover {
+    background: #b3ffb3 !important;
+  }
 `
