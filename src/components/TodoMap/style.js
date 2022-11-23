@@ -156,6 +156,11 @@ export const GoalDoneButton = styled.button`
   }
 `
 
+export const AlreadyDoneButton = styled.span`
+  font-size: 28px;
+  color: white;
+`
+
 export const Wrapper = styled.div`
   padding: 3em 0;
   background: hsla(140, 100%, 34%, 1);

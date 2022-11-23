@@ -7,12 +7,21 @@ import {
   Container,
   GoalTitle,
   GoalDoneButton,
-  Wrapper
+  Wrapper,
+  AlreadyDoneButton
 } from '../components/TodoMap/style'
+
+function sameDay(d1, d2) {
+  return d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+}
 
 const App = () => {
   const [session, loading] = useSession()
   const [goal, setGoal] = useState()
+  const [log, setLog] = useState()
+  const [haveDone, setHaveDone] = useState(false)
   const router = useRouter();
 
   useEffect(() => {
@@ -24,6 +33,20 @@ const App = () => {
       .then((goal) => {
         setGoal(goal)
       })
+  
+    fetch(`/api/goals/logFindOne?id=${router.query.id}`)
+      .then((log) => log.json())
+      .then((log) => {
+        setLog(log)
+        const today = new Date(new Date().setDate(new Date().getDate()))
+        log.forEach((goalLogItem) => {
+          if (sameDay(today, new Date(goalLogItem.createdAt))) {
+            setHaveDone(true)
+            console.log("haveDone")
+          }
+        })
+      })
+    
   }, [router.isReady])
 
   const done = () => {
@@ -55,13 +78,14 @@ const App = () => {
         <>
           <Navbar session={session}>
             <Wrapper>
-            <Container>
-              <GoalTitle>{goal.name}</GoalTitle>
-              <GoalDoneButton
-                onClick={done}>
-                Done
-              </GoalDoneButton>
-            </Container>
+              <Container>
+                <GoalTitle>{goal.name}</GoalTitle>
+                {haveDone ? 
+                  <AlreadyDoneButton> Already done! 🥳 </AlreadyDoneButton>
+                :
+                  <GoalDoneButton onClick={done}> Done </GoalDoneButton>
+                }
+              </Container>
             </Wrapper>
           </Navbar>
         </>
