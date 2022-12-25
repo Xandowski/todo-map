@@ -57,18 +57,22 @@ const groupByMonth = (log) => {
 
 const fillMissingDates = (log) => {
     const dates = log.map((item) => item.createdAt.split("T")[0])
-    const minDate = new Date(log[0].createdAt).getTime()
-    const maxDate = new Date();
-    let currentDate = minDate
+    const today = new Date();
 
-    const differenceInTime = maxDate - minDate;
+    var minDate = new Date(today.setDate(today.getDate() - 7 * 10)).getTime()
+    if (log && log.length > 0) {
+        minDate = new Date(log[0].createdAt).getTime()
+    }
+
+    var currentDate = minDate
+    const differenceInTime = today - currentDate;
     const differenceInDays = differenceInTime / (1000 * 3600 * 24);
     if (differenceInDays < 7 * 10) {
         let start = new Date(log[0].createdAt)
         currentDate = new Date(start.setDate(start.getDate() - 7 * 10)).getTime()
     }
 
-    while (currentDate <= maxDate) {
+    while (currentDate <= today) {
         let d = new Date(currentDate);
         let dateString = d.toISOString().split("T")[0]
         if (!dates.includes(dateString)) {
