@@ -10,6 +10,7 @@ import {
   Wrapper,
   AlreadyDoneButton
 } from '../components/TodoMap/style'
+import ConfettiExplosion from 'react-confetti-explosion';
 
 function sameDay(d1, d2) {
   return d1.getFullYear() === d2.getFullYear() &&
@@ -23,6 +24,7 @@ const App = () => {
   const [log, setLog] = useState()
   const [haveDone, setHaveDone] = useState(false)
   const router = useRouter();
+  const [isExploding, setIsExploding] = React.useState(false);
 
   useEffect(() => {
     if (!router.isReady) {
@@ -33,7 +35,7 @@ const App = () => {
       .then((goal) => {
         setGoal(goal)
       })
-  
+
     fetch(`/api/goals/logFindOne?id=${router.query.id}`)
       .then((log) => log.json())
       .then((log) => {
@@ -42,14 +44,15 @@ const App = () => {
         log.forEach((goalLogItem) => {
           if (sameDay(today, new Date(goalLogItem.createdAt))) {
             setHaveDone(true)
-            console.log("haveDone")
           }
         })
       })
-    
+
   }, [router.isReady])
 
   const done = () => {
+    setHaveDone(true)
+    setIsExploding(true)
     fetch(`/api/goals/done`, {
       method: "POST",
       body: JSON.stringify({
@@ -66,6 +69,14 @@ const App = () => {
       })
   }
 
+  const littleExplodeProps = {
+    force: 0.4,
+    duration: 3000,
+    particleCount: 50,
+    height: 500,
+    width: 450
+  };
+
   return (
     <>
       <Head>
@@ -80,10 +91,15 @@ const App = () => {
             <Wrapper>
               <Container>
                 <GoalTitle>{goal.name}</GoalTitle>
-                {haveDone ? 
-                  <AlreadyDoneButton> Already done! 🥳 </AlreadyDoneButton>
-                :
-                  <GoalDoneButton onClick={done}> Done </GoalDoneButton>
+                {haveDone ?
+                  <AlreadyDoneButton>
+                    Already done! 🥳
+                    {isExploding && <ConfettiExplosion {...littleExplodeProps} />}
+                  </AlreadyDoneButton>
+                  :
+                  <GoalDoneButton onClick={done}>
+                    Done ✔️
+                  </GoalDoneButton>
                 }
               </Container>
             </Wrapper>

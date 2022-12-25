@@ -137,7 +137,6 @@ height: 29px;
 `
 
 export const GoalTitle = styled.div`
-  color: white;
   font-size: 42px;
   line-height: 50px;
   margin-bottom: .6em;
@@ -156,18 +155,32 @@ export const GoalDoneButton = styled.button`
   }
 `
 
-export const AlreadyDoneButton = styled.span`
-  font-size: 28px;
-  color: white;
+export const AlreadyDoneButton = styled.button`
+  @-webkit-keyframes fadeOut {
+    from {opacity: 1;}
+    to {opacity: 0;}
+  }
+  @keyframes fadeOut {
+    from {opacity: 1;}
+    to {opacity: 0;}
+  }
+
+  font-size: 19px;
+  padding: .6em 1em;
+  border-radius: .3em;
+  background: ${(props) => props.theme.colors.lightGreen};
+  cursor: unset;
+  display:grid;
+  justify-items:center;
+  div {
+    margin-top: -5px;
+    -webkit-animation: fadeOut 2.2s ease-in-out forwards;
+    animation: fadeOut 2.2s ease-in-out forwards; /* Fading effect takes 1 second */
+  }
 `
 
 export const Wrapper = styled.div`
   padding: 3em 0;
-  background: hsla(140, 100%, 34%, 1);
-  background: linear-gradient(hsla(140, 100%, 34%, 1) 0%, hsla(140, 64%, 55%, 1) 70%);
-  background: -moz-linear-gradient(hsla(140, 100%, 34%, 1) 0%, hsla(140, 64%, 55%, 1) 70%);
-  background: -webkit-linear-gradient(hsla(140, 100%, 34%, 1) 0%, hsla(140, 64%, 55%, 1) 70%);
-  filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#00ac39", endColorstr="#43d674", GradientType=1 );
   @media (max-width: 960px) {
     padding: 1em 0;
   }
