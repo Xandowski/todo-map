@@ -8,6 +8,7 @@ module.exports = {
     'airbnb/hooks',
     // 'plugin:react/recommended',
     'plugin:prettier/recommended',
+    'utils.js'
   ],
   parserOptions: {
     ecmaFeatures: {

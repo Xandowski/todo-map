@@ -11,6 +11,7 @@ import {
   AlreadyDoneButton
 } from '../components/TodoMap/style'
 import ConfettiExplosion from 'react-confetti-explosion';
+import Chart from '../components/Goal/Chart';
 
 function sameDay(d1, d2) {
   return d1.getFullYear() === d2.getFullYear() &&
@@ -103,6 +104,9 @@ const App = () => {
                 }
               </Container>
             </Wrapper>
+            <Container>
+              <Chart log={log} />
+            </Container>
           </Navbar>
         </>
       )) ||

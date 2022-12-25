@@ -28,7 +28,7 @@ export default async (request, response) => {
       parentId: request.query.id,
       createdAt: 
       {
-        $gte: new Date((new Date().getTime() - (30 * 24 * 60 * 60 * 1000)))
+        $gte: new Date((new Date().getTime() - (1 * 365 * 24 * 60 * 60 * 1000)))
       }
     }
 
