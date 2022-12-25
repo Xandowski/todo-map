@@ -65,14 +65,17 @@ const fillMissingDates = (log) => {
     }
 
     var currentDate = minDate
-    const differenceInTime = today - currentDate;
+    const differenceInTime = today.getTime() - minDate;
     const differenceInDays = differenceInTime / (1000 * 3600 * 24);
     if (differenceInDays < 7 * 10) {
-        let start = new Date(log[0].createdAt)
+        var start = today
+        if (log && log.length > 0) {
+            start = new Date(log[0].createdAt)
+        }
         currentDate = new Date(start.setDate(start.getDate() - 7 * 10)).getTime()
     }
 
-    while (currentDate <= today) {
+    while (currentDate <= today.getTime()) {
         let d = new Date(currentDate);
         let dateString = d.toISOString().split("T")[0]
         if (!dates.includes(dateString)) {
