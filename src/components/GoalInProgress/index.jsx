@@ -64,6 +64,7 @@ const GenerateRandomGoalButton = styled.button`
   &.disabled{
     cursor: default;
     background-color: #4eafff;
+    filter: grayscale(70%);
   }
 `
 
@@ -128,7 +129,7 @@ const App = (props) => {
     }
   }, [props.goals])
 
-  if (!goalInProgress) {
+  if (!goalInProgress || !randomGoal) {
     return null
   }
   
@@ -137,7 +138,7 @@ const App = (props) => {
       <Container>
         <GoalContainer>
           <GenerateRandomGoalButton
-            className={`${randomGoal ? "disabled" : ""} ${!randomGoal && generatingRandomGoal ? "shake" : ""}`}
+            className={`${randomGoal.name ? "disabled" : ""} ${!randomGoal.name && generatingRandomGoal ? "shake" : ""}`}
             onClick={() => generateRandomGoal()}
           >
             <span>🎲</span>
