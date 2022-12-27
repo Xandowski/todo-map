@@ -64,7 +64,7 @@ const GenerateRandomGoalButton = styled.button`
   &.disabled{
     cursor: default;
     background-color: #4eafff;
-    filter: grayscale(70%);
+    opacity: 0.5;
   }
 `
 
@@ -77,6 +77,7 @@ function sameDay(d1, d2) {
 const App = (props) => {
   const [goalInProgress, setGoalInProgress] = useState()
   const [randomGoal, setRandomGoal] = useState()
+  const [alreadyDoneRandomGoal, setAlreadyDoneRandomGoal] = useState(false)
   const [generatingRandomGoal, setGeneratingRandomGoal] = useState(false)
 
   const getRandomGoal = () => {
@@ -86,6 +87,10 @@ const App = (props) => {
         setRandomGoal(data)
         if (data.name) {
           setGoalInProgress(data)
+        }
+
+        if (data.alreadyDone) {
+          setAlreadyDoneRandomGoal(true)
         }
       })
   }
@@ -132,13 +137,13 @@ const App = (props) => {
   if (!goalInProgress || !randomGoal) {
     return null
   }
-  
+
   return (
     <div>
       <Container>
         <GoalContainer>
           <GenerateRandomGoalButton
-            className={`${randomGoal.name ? "disabled" : ""} ${!randomGoal.name && generatingRandomGoal ? "shake" : ""}`}
+            className={`${randomGoal.name || alreadyDoneRandomGoal ? "disabled" : ""} ${!randomGoal.name && generatingRandomGoal ? "shake" : ""}`}
             onClick={() => generateRandomGoal()}
           >
             <span>🎲</span>

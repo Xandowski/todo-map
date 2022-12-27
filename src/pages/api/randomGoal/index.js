@@ -2,6 +2,7 @@ import connect from '../../../utils/database'
 import SessionsSchema from '../../../models/sessions'
 import RandomGoalsSchema from '../../../models/randomGoals'
 import GoalsSchema from '../../../models/goals'
+import GoalsLogSchema from '../../../models/goalsLog'
 import Cookies from 'cookies'
 
 
@@ -32,6 +33,19 @@ export default async (request, response) => {
     });
 
     if (randomGoal) {
+      const now = new Date()
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      const alreadyDoneRandomGoal = await GoalsLogSchema.find({
+        owner: session.userId,
+        createdAt: { $gte: today },
+        parentId: randomGoal.parentId
+      })
+
+      if (alreadyDoneRandomGoal.length > 0) {
+        response.status(200).json({ alreadyDone: true })
+        return
+      }
+
       const goal = await GoalsSchema.findOne({
         owner: session.userId,
         _id: randomGoal.parentId
