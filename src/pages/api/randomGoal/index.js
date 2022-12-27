@@ -2,9 +2,8 @@ import connect from '../../../utils/database'
 import SessionsSchema from '../../../models/sessions'
 import RandomGoalsSchema from '../../../models/randomGoals'
 import GoalsSchema from '../../../models/goals'
-import GoalsLogSchema from '../../../models/goalsLog'
-import { ObjectID } from 'mongodb'
 import Cookies from 'cookies'
+
 
 export default async (request, response) => {
   if (request.method === 'GET') {
@@ -27,12 +26,22 @@ export default async (request, response) => {
 
     const lastTwoHour = new Date();
     lastTwoHour.setHours(lastTwoHour.getHours() - 2);
-    const randomGoalAlreadySet = await RandomGoalsSchema.findOne({
+    const randomGoal = await RandomGoalsSchema.findOne({
       owner: session.userId,
       createdAt: { $gte: lastTwoHour }
     });
 
-    response.status(200).json(randomGoalAlreadySet)
+    if (randomGoal) {
+      const goal = await GoalsSchema.findOne({
+        owner: session.userId,
+        _id: randomGoal.parentId
+      })
+
+      response.status(200).json(goal)
+      return
+    }
+
+    response.status(200).json({})
     return
 
   } else {

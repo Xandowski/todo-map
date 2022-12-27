@@ -57,8 +57,18 @@ export default async (request, response) => {
       parentId:new ObjectID(randomGoal._id),
       createdAt: new Date()
     })
+    
+    if (definedRandomGoal) {
+      const goal = await GoalsSchema.findOne({
+        owner: session.userId,
+        _id: definedRandomGoal.parentId
+      })
 
-    response.status(200).json(definedRandomGoal)
+      response.status(200).json(goal)
+      return
+    }
+
+    response.status(500).json({message:'Random goal can not be defined'})
     return
 
   } else {

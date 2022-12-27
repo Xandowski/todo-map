@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import styled from 'styled-components'
 import { Container } from '../../styles/base'
+import Link from 'next/link'
 
 const GoalContainer = styled.div`
   display: flex;
@@ -13,69 +14,57 @@ const GoalWrap = styled.div`
   padding: 1em 1em;
   background-color: #4eafff;
   border-radius: 0.3em;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  cursor: pointer;
 `
 const ComponentTag = styled.div`
   color:#fff;
   font-size: 12px;
-  padding-left: 1em;
-  padding-bottom: .3em;
+  padding-bottom: .5em;
   font-weight: 500;
 `
 
 const GoalTitle = styled.div`
   color:#fff;
   font-size: 23px;
-  padding-left: .5em;
   font-weight: 600;
 `
+const GenerateRandomGoalButton = styled.button`
+  @keyframes horizontal-shaking {
+    0% { transform: translateX(0) }
+    10% { transform: translateX(5px) }
+    20% { transform: translateX(-5px) }
+    30% { transform: translateX(5px) }
+    40% { transform: translateX(0) }
+    50% { transform: translateX(5px) }
+    60% { transform: translateX(-5px) }
+    70% { transform: translateX(5px) }
+    80% { transform: translateX(0) }
+  }
 
-const clockWidth = '3rem'
-const clockColor = '#ffffff'
-const clockRadius = 'calc(' + clockWidth + ' / 2)'
-const clockMinuteLength = 'calc(' + clockWidth + ' * 0.4)'
-const clockHourLength = 'calc(' + clockWidth + ' * 0.2)'
-const clockThickness = '0.1rem'
-const Clock = styled.div`
-.clock-loader {
-  position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: ${clockWidth};
-  height: ${clockWidth};
-  border: 3px solid ${clockColor};
-  border-radius: 50%;
-
-  &::before,
-  &::after {
-    position: absolute;
-    content: "";
-    top: calc(${clockRadius} * 0.14);
-    width: ${clockThickness};
-    background: ${clockColor};
-    border-radius: 10px;
-    transform-origin: center calc(100% - calc(${clockThickness} / 2));
-    animation: spin infinite linear;
+  align-items:center;
+  padding: 0 .5em;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  background-color: #4eafff;
+  border-radius: 0.15em;
+  margin-right: .5em;
+  font-size: 2.5em;
+  span{
+    margin-top: -3px;
   }
-
-  &::before {
-    height: ${clockMinuteLength};
-    animation-duration: 15s;
+  &:hover {
+    background-color: #7cc4ff;
   }
-
-  &::after {
-    top: calc(${clockRadius} * 0.14 + ${clockHourLength});
-    height: ${clockHourLength};
-    animation-duration: 90s;
+  &.shake{
+    -webkit-animation: horizontal-shaking .5s ease-in-out;
+    animation: horizontal-shaking .5s ease-in-out;
   }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(1turn);
+  &.disabled{
+    cursor: default;
+    background-color: #4eafff;
   }
-}
 `
 
 function sameDay(d1, d2) {
@@ -86,7 +75,36 @@ function sameDay(d1, d2) {
 
 const App = (props) => {
   const [goalInProgress, setGoalInProgress] = useState()
+  const [randomGoal, setRandomGoal] = useState()
+  const [generatingRandomGoal, setGeneratingRandomGoal] = useState(false)
+
+  const getRandomGoal = () => {
+    return fetch('/api/randomGoal')
+      .then((data) => data.json())
+      .then((data) => {
+        setRandomGoal(data)
+        if (data.name) {
+          setGoalInProgress(data)
+        }
+      })
+  }
+
+  const generateRandomGoal = () => {
+    setGeneratingRandomGoal(true)
+    setTimeout(() => {
+      setGeneratingRandomGoal(false)
+    }, 1000)
+    return fetch('/api/randomGoal/generate')
+      .then((data) => data.json())
+      .then((data) => {
+        if (data.name) {
+          setGoalInProgress(data)
+        }
+      })
+  }
+
   useEffect(() => {
+    getRandomGoal()
     if (props.goals.length > 0) {
       var goalsTemp = [...props.goals]
       goalsTemp.sort((a, b) => a.name.localeCompare(b.name))
@@ -104,26 +122,38 @@ const App = (props) => {
           }
         })
       }
-      setGoalInProgress(lessDoneGoal);
+      if (!goalInProgress) {
+        setGoalInProgress(lessDoneGoal)
+      }
     }
   }, [props.goals])
+
+  if (!goalInProgress) {
+    return null
+  }
+  
   return (
     <div>
       <Container>
         <GoalContainer>
-          <GoalWrap>
-            <Clock>
-              <div className="clock-loader"></div>
-            </Clock>
-            <div>
-              <ComponentTag>
-                Your next goal
-              </ComponentTag>
-              <GoalTitle>
-                {goalInProgress ? goalInProgress.name : "No goals in progress"}
-              </GoalTitle>
-            </div>
-          </GoalWrap>
+          <GenerateRandomGoalButton
+            className={`${randomGoal ? "disabled" : ""} ${!randomGoal && generatingRandomGoal ? "shake" : ""}`}
+            onClick={() => generateRandomGoal()}
+          >
+            <span>🎲</span>
+          </GenerateRandomGoalButton>
+          <Link href={{ pathname: '/goal', query: { id: goalInProgress._id } }}>
+            <GoalWrap>
+              <div>
+                <ComponentTag>
+                  Your next goal
+                </ComponentTag>
+                <GoalTitle>
+                  {goalInProgress ? goalInProgress.name : "No goals in progress"}
+                </GoalTitle>
+              </div>
+            </GoalWrap>
+          </Link>
         </GoalContainer>
       </Container>
     </div>
