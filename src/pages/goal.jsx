@@ -23,6 +23,7 @@ const App = () => {
   const [session, loading] = useSession()
   const [goal, setGoal] = useState()
   const [log, setLog] = useState()
+  const [chartData, setChartData] = useState()
   const [haveDone, setHaveDone] = useState(false)
   const router = useRouter();
   const [isExploding, setIsExploding] = React.useState(false);
@@ -41,8 +42,10 @@ const App = () => {
       .then((log) => log.json())
       .then((log) => {
         setLog(log)
-        const today = new Date(new Date().setDate(new Date().getDate()))
+        setChartData(JSON.parse(JSON.stringify(log)))
+        const today = new Date()
         log.forEach((goalLogItem) => {
+          console.log(goalLogItem.createdAt)
           if (sameDay(today, new Date(goalLogItem.createdAt))) {
             setHaveDone(true)
           }
@@ -105,7 +108,7 @@ const App = () => {
               </Container>
             </Wrapper>
             <Container>
-              <Chart log={log} />
+              <Chart log={chartData} />
             </Container>
           </Navbar>
         </>
