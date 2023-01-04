@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import OrderByDropdown from './orderByDropdown'
 import useWindowSize from "../../utils/useWindowSize"
 import NewGoal from '../../components/NewGoal'
-import GoalInProgress from '../../components/GoalInProgress'
+import YourNextGoal from '../../components/YourNextGoal'
 import Link from 'next/link'
 
 import {
@@ -93,7 +93,7 @@ const App = () => {
   }, [])
   return (
     <div>
-      <GoalInProgress goals={goals} goalsLog={goalsLog}></GoalInProgress>
+      <YourNextGoal goals={goals} goalsLog={goalsLog}></YourNextGoal>
       <Container>
         <GoaldAndCellsContainer>
           <Col>

@@ -75,7 +75,7 @@ function sameDay(d1, d2) {
 }
 
 const App = (props) => {
-  const [goalInProgress, setGoalInProgress] = useState()
+  const [goalInProgress, setGoalInProgress] = useState(null)
   const [randomGoal, setRandomGoal] = useState()
   const [alreadyDoneRandomGoal, setAlreadyDoneRandomGoal] = useState(false)
   const [generatingRandomGoal, setGeneratingRandomGoal] = useState(false)
@@ -92,6 +92,8 @@ const App = (props) => {
         if (data.alreadyDone) {
           setAlreadyDoneRandomGoal(true)
         }
+
+        return data
       })
   }
 
@@ -106,32 +108,35 @@ const App = (props) => {
         if (data.name) {
           setGoalInProgress(data)
         }
+
+        return data
       })
   }
 
-  useEffect(() => {
-    getRandomGoal()
-    if (props.goals.length > 0) {
-      var goalsTemp = [...props.goals]
-      goalsTemp.sort((a, b) => a.name.localeCompare(b.name))
-      goalsTemp.sort((a, b) => a.intensity < b.intensity ? -1 : 0)
-      var lessDoneGoal = undefined
-      var alreadyDoneToday = true
-      while (alreadyDoneToday) {
-        alreadyDoneToday = false
-        lessDoneGoal = goalsTemp[0]
-        props.goalsLog.forEach((log) => {
-          if (log.parentId === lessDoneGoal._id) {
-            if (sameDay(new Date(log.createdAt), new Date())) {
-              alreadyDoneToday = true
+  useEffect(async () => {
+    getRandomGoal().then((data) => {
+      console.log(data)
+      if (!data.name) {
+        var goalsTemp = [...props.goals]
+        goalsTemp.sort((a, b) => a.name.localeCompare(b.name))
+        goalsTemp.sort((a, b) => a.intensity < b.intensity ? -1 : 0)
+        var lessDoneGoal = undefined
+        var alreadyDoneToday = true
+        while (alreadyDoneToday) {
+          alreadyDoneToday = false
+          lessDoneGoal = goalsTemp[0]
+          props.goalsLog.forEach((log) => {
+            if (log.parentId === lessDoneGoal._id) {
+              if (sameDay(new Date(log.createdAt), new Date())) {
+                alreadyDoneToday = true
+              }
             }
-          }
-        })
-      }
-      if (!goalInProgress) {
+          })
+        }
         setGoalInProgress(lessDoneGoal)
       }
-    }
+    })
+
   }, [props.goals])
 
   if (!goalInProgress || !randomGoal) {
