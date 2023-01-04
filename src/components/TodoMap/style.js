@@ -45,11 +45,6 @@ max-width: 700px;
   width: auto;
   white-space: nowrap;
 }
-@media (max-width: 420px) {
-  max-width: calc(100vw - 150px);
-  width: auto;
-  white-space: nowrap;
-}
 
 /* 
 max-width: calc(100vw - 260px);
@@ -106,7 +101,6 @@ background: ${props => props.done ? props.theme.colors.green : props.theme.color
 `
 
 export const NameColumn = styled.div`
-/* width: 180px; */
 width: 100%;
 margin: 0 5px 0 0;
 text-align: right;

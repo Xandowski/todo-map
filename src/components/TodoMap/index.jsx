@@ -53,13 +53,16 @@ const getGreenIntensity = (input, goals) => {
 }
 
 const truncate = (str, width) => {
-  if (!width) return ""
+  if (!width) {
+    return ""
+  }
+
   if (width <= 500) {
-    var n = 10
+    var n = 21
     if (str.length <= n) {
       return str;
     }
-    return str.substr(0, 6) + "..." + str.substring(str.length - 6);
+    return str.substr(0, 21) + "...";
   } else {
     return str
   }
