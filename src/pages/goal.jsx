@@ -12,6 +12,8 @@ import {
 } from '../components/TodoMap/style'
 import ConfettiExplosion from 'react-confetti-explosion';
 import Chart from '../components/Goal/Chart';
+import Menu from '../components/Goal/Header/Menu';
+
 
 function sameDay(d1, d2) {
   return d1.getFullYear() === d2.getFullYear() &&
@@ -92,7 +94,12 @@ const App = () => {
           <Navbar session={session}>
             <Wrapper>
               <Container>
+                <div className='d-flex justify-content-between'>
                 <GoalTitle>{goal.name}</GoalTitle>
+                  <Menu goal={goal} />
+                </div>
+                
+                
                 {haveDone ?
                   <AlreadyDoneButton>
                     Already done! 🥳

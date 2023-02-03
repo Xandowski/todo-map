@@ -5,6 +5,7 @@ import {
   ThemeSwitchProvider,
 } from '../contexts/ThemeSwitchContext'
 import { GlobalStyles } from '../styles/global'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../utils/reset.css'
 
 export default function App({ Component, pageProps }) {
