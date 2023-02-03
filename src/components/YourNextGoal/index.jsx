@@ -31,15 +31,8 @@ const GoalTitle = styled.div`
 `
 const GenerateRandomGoalButton = styled.button`
   @keyframes horizontal-shaking {
-    0% { transform: translateX(0) }
-    10% { transform: translateX(5px) }
-    20% { transform: translateX(-5px) }
-    30% { transform: translateX(5px) }
-    40% { transform: translateX(0) }
-    50% { transform: translateX(5px) }
-    60% { transform: translateX(-5px) }
-    70% { transform: translateX(5px) }
-    80% { transform: translateX(0) }
+    0% { transform: rotate(0deg) }
+    100% { transform: rotate(360deg)}
   }
 
   display: flex;
@@ -58,8 +51,11 @@ const GenerateRandomGoalButton = styled.button`
     background-color: #7cc4ff;
   }
   &.shake{
-    -webkit-animation: horizontal-shaking .5s ease-in-out;
-    animation: horizontal-shaking .5s ease-in-out;
+    span {
+      -webkit-animation: horizontal-shaking .2s;
+      animation: horizontal-shaking .2s;
+      animation-iteration-count: infinite;
+    }
   }
   &.disabled{
     cursor: default;
@@ -85,6 +81,7 @@ const App = (props) => {
       .then((data) => data.json())
       .then((data) => {
         setRandomGoal(data)
+
         if (data.name) {
           setGoalInProgress(data)
         }
@@ -105,6 +102,8 @@ const App = (props) => {
     return fetch('/api/randomGoal/generate')
       .then((data) => data.json())
       .then((data) => {
+        setRandomGoal(data)
+
         if (data.name) {
           setGoalInProgress(data)
         }
@@ -115,7 +114,6 @@ const App = (props) => {
 
   useEffect(async () => {
     getRandomGoal().then((data) => {
-      console.log(data)
       if (!data.name) {
         var goalsTemp = [...props.goals]
         goalsTemp.sort((a, b) => a.name.localeCompare(b.name))
