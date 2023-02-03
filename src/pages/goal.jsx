@@ -45,7 +45,6 @@ const App = () => {
         setChartData(JSON.parse(JSON.stringify(log)))
         const today = new Date()
         log.forEach((goalLogItem) => {
-          console.log(goalLogItem.createdAt)
           if (sameDay(today, new Date(goalLogItem.createdAt))) {
             setHaveDone(true)
           }
@@ -69,7 +68,6 @@ const App = () => {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response)
       })
   }
 
